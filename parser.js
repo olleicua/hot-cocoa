@@ -32,7 +32,7 @@
  * Sam Auciello | September 2012 | http://opensource.org/licenses/mit-license.php
  */
 
-var can_expand = function(node, token) {
+var can_expand = function(grammar, node, token) {
 	if (token.type === node) {
 		return true;
 	}
@@ -41,7 +41,8 @@ var can_expand = function(node, token) {
 		// errors thrown from here??
 	}
 	for (var i = 0; i < grammar[node].length; i++) {
-		if (can_expand(grammar[node][i][0], token)) {
+		if (grammar[node][i].length === 0 ||
+			can_expand(grammar, grammar[node][i][0], token)) {
 			return true;
 		}
 	}
@@ -49,7 +50,12 @@ var can_expand = function(node, token) {
 }
 
 var guess = function(guess_node, tokens, grammar, position) {
-	console.log(guess_node, position);
+	var expansions = grammar[guess_node];
+	if (tokens[position] === undefined && expansions &&
+		expansions[expansions.length - 1].length === 0) { // check for empty end condition
+			return true;
+		// TODO: this might be better solved by setting the current token to an empty token..
+	}
 	if (tokens[position].type === guess_node) { // token already matches
 		return true
 	}
@@ -58,7 +64,8 @@ var guess = function(guess_node, tokens, grammar, position) {
 	}
 	for (var i = 0; i < grammar[guess_node].length; i++) { // look for matching expansion
 		var posibility = grammar[guess_node][i];
-		if (can_expand(posibility[0], tokens[position])) { // assume this expansion if possible
+		if (posibility.length === 0 ||
+			can_expand(grammar, posibility[0], tokens[position])) { // assume this expansion if possible
 			var subtree = [];
 			for (var j = 0; j < posibility.length; j++) {
 				var node = posibility[j];
