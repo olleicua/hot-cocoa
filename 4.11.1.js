@@ -9,32 +9,32 @@ var scanner = require('./scanner.js');
 var parser = require('./parser.js');
 
 var tokenTypes = [
-	{ t:'digit', re:/^\d/ },
-	{ t:'.', re:/^\./ }
+    { t:'digit', re:/^\d/ },
+    { t:'.', re:/^\./ }
 ];
 
 var grammar = {
-	'float': [
-		['digits', '.', 'digits']
-	],
-	'digits': [
-		['digit', 'more-digits']
-	],
-	'more-digits': [
-		['digits'],
-		[]
-	]
+    'float': [
+        ['digits', '.', 'digits']
+    ],
+    'digits': [
+        ['digit', 'more-digits']
+    ],
+    'more-digits': [
+        ['digits'],
+        []
+    ]
 };
 
 var tests = [
-	'1.0',
-	'2.1234',
-	'6345.904'
+    '1.0',
+    '2.1234',
+    '6345.904'
 ];
 
 for (var i = 0; i < tests.length; i++) {
-	var tokens = scanner.scan(tokenTypes, tests[i]);
-	console.log(JSON.stringify(tokens));
-	var tree = parser.parse(tokens, grammar, "float");
-	console.log(JSON.stringify(tree));
+    var tokens = scanner.scan(tokenTypes, tests[i]);
+    console.log(JSON.stringify(tokens));
+    var tree = parser.parse(tokens, grammar, "float");
+    console.log(JSON.stringify(tree));
 }

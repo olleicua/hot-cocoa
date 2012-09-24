@@ -40,24 +40,24 @@
  */
 
 var firstMatch = function(tokenTypes, text, pointer) {
-	for (var i = 0; i < tokenTypes.length; i++) {
-		var match = tokenTypes[i].re.exec(text);
-		if (match) {
-			return { type:tokenTypes[i].t, text:match[0], position:pointer };
-		}
-	}
-	throw 'unrecognizable token at position ' + pointer;
+    for (var i = 0; i < tokenTypes.length; i++) {
+        var match = tokenTypes[i].re.exec(text);
+        if (match) {
+            return { type:tokenTypes[i].t, text:match[0], position:pointer };
+        }
+    }
+    throw 'unrecognizable token at position ' + pointer;
 }
 
 exports.scan = function(tokenTypes, text) {
-	var tokenList = [];
-	var pointer = 0;
-	while (pointer < text.length) {
-		var match = firstMatch(tokenTypes, text.substring(pointer), pointer);
-		if (match.type !== 'whitespace') {
-			tokenList.push(match);
-		}
-		pointer += match.text.length;
-	}
-	return tokenList;
+    var tokenList = [];
+    var pointer = 0;
+    while (pointer < text.length) {
+        var match = firstMatch(tokenTypes, text.substring(pointer), pointer);
+        if (match.type !== 'whitespace') {
+            tokenList.push(match);
+        }
+        pointer += match.text.length;
+    }
+    return tokenList;
 };
