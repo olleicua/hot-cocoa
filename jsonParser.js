@@ -15,7 +15,7 @@ var tokensTypes = [
 	{ t:']', re:/^\]/ },
 	{ t:',', re:/^,/ },
 	{ t:':', re:/^:/ },
-	{ t:'whitespace', re:/\s*/ }
+	{ t:'whitespace', re:/^\s*/ }
 ];
 
 var grammar = {

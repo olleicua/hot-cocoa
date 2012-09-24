@@ -1,4 +1,4 @@
-/* Javascript Parser
+/* Parser in Javascript
  * 
  * This is a simple recursive decent parser using an abstract JSON grammar
  * notation of my own design.  The grammar consists of an object relating a
@@ -26,8 +26,11 @@
  *   };
  *   var tree = parser.parse(tokens, grammar, "ab");
  * 
- * The abover generates the parse tree:
- *   [{type:"ab", tree:[{type:"a"}, {type:"b"}]}]
+ * The above generates the parse tree:
+ *   [{type:"ab", tree:[
+ *       {type:"a"},
+ *       {type:"b"}
+ *   ]}]
  * 
  * Sam Auciello | September 2012 | http://opensource.org/licenses/mit-license.php
  */
