@@ -42,7 +42,10 @@
 
 exports.analyzer = function(grammar) {
     grammar.analyze = function(node, args) {
-        return this[node.type](node.tree, args);
+        if (node.tree !== undefined) {
+            return this[node.type](node.tree, args);
+        }
+        return this[node.type](node, args);
     };
     grammar.apply = function(tree) {
         var results = [];
