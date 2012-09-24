@@ -35,7 +35,8 @@
  *       {type:"variable", text:"fooB0", position:10}
  *   ]
  * 
- * Sam Auciello | September 2012 | http://opensource.org/licenses/mit-license.php
+ * Sam Auciello | September 2012
+ * http://opensource.org/licenses/mit-license.php
  */
 
 var firstMatch = function(tokenTypes, text, pointer) {

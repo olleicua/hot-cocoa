@@ -1,7 +1,8 @@
 /* An implementation of a parser for the CFG described in exercise 4.11 of
  * Programming Language Pragmatics 3rd Edition page 207-8
  * 
- * Sam Auciello | September 2012 | http://opensource.org/licenses/mit-license.php
+ * Sam Auciello | September 2012
+ * http://opensource.org/licenses/mit-license.php
  */
 
 var scanner = require('./scanner.js');

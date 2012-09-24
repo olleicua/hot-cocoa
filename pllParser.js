@@ -3,7 +3,8 @@
  * A simple toy problem of a Propositional logic calculator language with
  * variables
  * 
- * Sam Auciello | September 2012 | http://opensource.org/licenses/mit-license.php
+ * Sam Auciello | September 2012
+ * http://opensource.org/licenses/mit-license.php
  */
 
 var scanner = require('./scanner.js');
