@@ -21,7 +21,7 @@
  *   var tokens = [{"type":"a"}, {"type":"b"}];
  *   var grammar = {
  *       "ab": [
- *   	       ["a", "b"]
+ *              ["a", "b"]
  *       ]
  *   };
  *   var tree = parser.parse(tokens, grammar, "ab");
@@ -32,63 +32,67 @@
  *       {type:"b"}
  *   ]}]
  * 
- * Sam Auciello | September 2012 | http://opensource.org/licenses/mit-license.php
+ * Sam Auciello | September 2012 
+ * http://opensource.org/licenses/mit-license.php
  */
 
 var can_expand = function(grammar, node, token) {
-	if (token.type === node) {
-		return true;
-	}
-	if (grammar[node] === undefined) {
-		return false
-		// errors thrown from here??
-	}
-	for (var i = 0; i < grammar[node].length; i++) {
-		if (grammar[node][i].length === 0 ||
-			can_expand(grammar, grammar[node][i][0], token)) {
-			return true;
-		}
-	}
-	return false;
+    if (token.type === node) {
+        return true;
+    }
+    if (grammar[node] === undefined) {
+        return false
+        // errors thrown from here??
+    }
+    for (var i = 0; i < grammar[node].length; i++) {
+        if (grammar[node][i].length === 0 ||
+            can_expand(grammar, grammar[node][i][0], token)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 var guess = function(guess_node, tokens, grammar, position) {
-	var expansions = grammar[guess_node];
-	if (tokens[position] === undefined && expansions &&
-		expansions[expansions.length - 1].length === 0) { // check for empty end condition
-			return true;
-		// TODO: this might be better solved by setting the current token to an empty token..
-	}
-	if (tokens[position].type === guess_node) { // token already matches
-		return true
-	}
-	if (grammar[guess_node] === undefined) { // token doesn't match and can't be expanded
-		return false
-	}
-	for (var i = 0; i < grammar[guess_node].length; i++) { // look for matching expansion
-		var posibility = grammar[guess_node][i];
-		if (posibility.length === 0 ||
-			can_expand(grammar, posibility[0], tokens[position])) { // assume this expansion if possible
-			var subtree = [];
-			for (var j = 0; j < posibility.length; j++) {
-				var node = posibility[j];
-				if (guess(node, tokens, grammar, position + j)) {
-					subtree.push(tokens[position + j]);
-				} else {
-					return false;
-				}
-			}
-			tokens.splice(position, subtree.length, {type:guess_node, tree:subtree});
-			return true;
-		}
-	}
-	return false;
+    var expansions = grammar[guess_node];
+    if (tokens[position] === undefined && expansions &&
+        expansions[expansions.length - 1].length === 0) { // check for empty end
+            return true;                                  // condition
+        
+        // TODO: this might be better solved by setting the current token to an
+        //       empty token (i.e. {type:undefined})
+    }
+    if (tokens[position].type === guess_node) { // token already matches
+        return true
+    }
+    if (grammar[guess_node] === undefined) { // token doesn't match and can't be
+        return false                         // expanded
+    }
+    for (var i = 0; i < grammar[guess_node].length; i++) { // look for matching
+        var posibility = grammar[guess_node][i];           // expansion
+        if (posibility.length === 0 ||
+            can_expand(grammar, posibility[0], tokens[position])) {
+            var subtree = [];               // assume this expansion if possible
+            for (var j = 0; j < posibility.length; j++) {
+                var node = posibility[j];
+                if (guess(node, tokens, grammar, position + j)) {
+                    subtree.push(tokens[position + j]);
+                } else {
+                    return false;
+                }
+            }
+            tokens.splice(position, subtree.length,
+                          {type:guess_node, tree:subtree});
+            return true;
+        }
+    }
+    return false;
 }
 
 exports.parse = function(tokens, grammar, start_node) {
-	if (guess(start_node, tokens, grammar, 0)) {
-		return tokens;
-	} else {
-		throw 'parse error';
-	}
+    if (guess(start_node, tokens, grammar, 0)) {
+        return tokens;
+    } else {
+        throw 'parse error';
+    }
 }
