@@ -45,8 +45,7 @@ var can_expand = function(grammar, node, token) {
         // errors thrown from here??
     }
     for (var i = 0; i < grammar[node].length; i++) {
-        if (grammar[node][i].length === 0 ||
-            can_expand(grammar, grammar[node][i][0], token)) {
+        if (can_expand(grammar, grammar[node][i][0], token)) {
             return true;
         }
     }
@@ -57,22 +56,20 @@ var guess = function(guess_node, tokens, grammar, position) {
     var expansions = grammar[guess_node];
     if (tokens[position] === undefined && expansions &&
         expansions[expansions.length - 1].length === 0) { // check for empty end
-            return true;                                  // condition
-        
-        // TODO: this might be better solved by setting the current token to an
-        //       empty token (i.e. {type:undefined})
+            tokens.splice(position, 1, {type:guess_node, tree:[]}); // condition
+            return true;
     }
     if (tokens[position].type === guess_node) { // token already matches
         return true
     }
-    if (grammar[guess_node] === undefined) { // token doesn't match and can't be
-        return false                         // expanded
+    if (expansions === undefined) { // token doesn't match and can't be expanded
+        return false
     }
-    for (var i = 0; i < grammar[guess_node].length; i++) { // look for matching
-        var posibility = grammar[guess_node][i];           // expansion
-        if (posibility.length === 0 ||
+    for (var i = 0; i < expansions.length; i++) { // look for matching expansion
+        var posibility = expansions[i];
+        if (posibility.length === 0 ||      // assume this expansion if possible
             can_expand(grammar, posibility[0], tokens[position])) {
-            var subtree = [];               // assume this expansion if possible
+            var subtree = [];
             for (var j = 0; j < posibility.length; j++) {
                 var node = posibility[j];
                 if (guess(node, tokens, grammar, position + j)) {
