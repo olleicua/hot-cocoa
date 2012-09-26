@@ -12,7 +12,7 @@ var parser = require('./parser.js');
 
 var tokensTypes = [
     { t:'infix-operator', re:/^(and|or|implies|xor|iff)\b/ },
-    { t:'preix-operator', re:/^not\b/ },
+    { t:'prefix-operator', re:/^not\b/ },
     { t:'literal', re:/^(true|false)\b/ },
     { t:'variable', re:/^[a-zA-Z_][a-zA-Z0-9_]*/ },
     { t:'(', re:/^\("/ },
@@ -35,10 +35,14 @@ var grammar = {
         ['variable', '=', '_expression']
     ],
     '_expression': [
-        ['_literal']
+        ['_unambiguous-expression'],
+        ['_unambiguous-expression', 'infix-operator', '_unambiguous-expression'],
     ],
-    '_literal': [
-    ]
+	'_unambiguous-expression': [
+		['literal'],
+		['(', '_expression', ')']
+		['prefix-operator', '_unambiguous-expression']
+	]
 };
 
 var tests = [
