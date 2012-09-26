@@ -36,59 +36,46 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var can_expand = function(grammar, node, token) {
-    if (token.type === node) {
-        return true;
-    }
-    if (grammar[node] === undefined) {
-        return false
-        // errors thrown from here??
-    }
-    for (var i = 0; i < grammar[node].length; i++) {
-        if (can_expand(grammar, grammar[node][i][0], token)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 var guess = function(guess_node, tokens, grammar, position) {
-    var expansions = grammar[guess_node];
-    if (tokens[position] === undefined && expansions &&
-        expansions[expansions.length - 1].length === 0) { // check for empty end
-            tokens.splice(position, 1, {type:guess_node, tree:[]}); // condition
-            return true;
-    }
-    if (tokens[position].type === guess_node) { // token already matches
-        return true
-    }
-    if (expansions === undefined) { // token doesn't match and can't be expanded
-        return false
-    }
-    for (var i = 0; i < expansions.length; i++) { // look for matching expansion
-        var posibility = expansions[i];
-        if (posibility.length === 0 ||      // assume this expansion if possible
-            can_expand(grammar, posibility[0], tokens[position])) {
-            var subtree = [];
-            for (var j = 0; j < posibility.length; j++) {
-                var node = posibility[j];
-                if (guess(node, tokens, grammar, position + j)) {
-                    subtree.push(tokens[position + j]);
-                } else {
-                    return false;
-                }
-            }
-            tokens.splice(position, subtree.length,
-                          {type:guess_node, tree:subtree});
-            return true;
-        }
-    }
-    return false;
+	var expansions = grammar[guess_node];
+	var current_token = tokens[position];
+	if (current_token && current_token.type === guess_node) {
+		return [current_token, 1];
+	}
+	if (expansions === undefined) {
+		return false;
+	}
+	var result_node = {type:guess_node};
+	for (var i = 0; i < expansions.length; i++) {
+		var possibility = expansions[i];
+		var offset = 0;
+		result_node.tree = [];
+		for (var j = 0; j < possibility.length; j++) {
+			var node = possibility[j];
+			var parse_result = guess(node, tokens, grammar, position + offset);
+			if (! parse_result) {
+				break;
+			}
+			result_node.tree.push(parse_result[0]);
+			offset += parse_result[1];
+		}
+		if (result_node.tree.length === possibility.length) {
+			return [result_node, offset];
+		}
+	}
+	return false;
 }
 
 exports.parse = function(tokens, grammar, start_node) {
-    if (guess(start_node, tokens, grammar, 0)) {
-        return tokens;
+	var result = guess(start_node, tokens, grammar, 0);
+    if (result) {
+		if (result[1] === tokens.length) {
+			return [result[0]];
+		} else {
+			throw 'unexpected token of type ' + tokens[result[1]].type +
+				': ' + tokens[result[1]].text + ' at position ' +
+				tokens[result[1]].position ;
+		}
     } else {
         throw 'parse error';
     }

@@ -10,7 +10,7 @@
 var scanner = require('./scanner.js');
 var parser = require('./parser.js');
 
-var tokensTypes = [
+var tokenTypes = [
     { t:'infix-operator', re:/^(and|or|implies|xor|iff)\b/ },
     { t:'prefix-operator', re:/^not\b/ },
     { t:'literal', re:/^(true|false)\b/ },
