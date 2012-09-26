@@ -7,28 +7,28 @@
  * 
  * Example Usage:
  *   var analyzer = require('./analyzer.js');
- *   var tree =  [{type:"sum-pair", tree:[
- *       {type:"sum", tree:[
+ *   var tree =  [{type:"_sum-pair", tree:[
+ *       {type:"_sum", tree:[
  *           {type:"number", text:"1"},
  *           {type:"+"},
  *           {type:"number", text:"2"}
  *       ]},
- *       {type:"sum", tree:[
+ *       {type:"_sum", tree:[
  *           {type:"number", text:"3"},
  *           {type:"+"},
  *           {type:"number", text:"3"}
  *       ]}
  *   ]}];
  *   var grammar = analyzer.analyzer({
- *       "sum-pair": function(tree) {
+ *       "_sum-pair": function(tree) {
  *           first_sum = this.analyze(tree[0]);
  *           second_sum = this.analyze(tree[1]);
  *           return [first_sum, second_sum];
  *       },
- *       "sum": function(tree) {
+ *       "_sum": function(tree) {
  *           first_number = parseInt(tree[0].text);
  *           second_number = parseInt(tree[2].text);
- *       return first_number + second_number;
+ *           return first_number + second_number;
  *       }
  *   });
  *   var result = grammar.apply(tree);

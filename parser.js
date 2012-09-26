@@ -20,14 +20,14 @@
  *   var parser = require('./parser.js');
  *   var tokens = [{"type":"a"}, {"type":"b"}];
  *   var grammar = {
- *       "ab": [
+ *       "_ab": [
  *              ["a", "b"]
  *       ]
  *   };
- *   var tree = parser.parse(tokens, grammar, "ab");
+ *   var tree = parser.parse(tokens, grammar, "_ab");
  * 
  * The above generates the parse tree:
- *   [{type:"ab", tree:[
+ *   [{type:"_ab", tree:[
  *       {type:"a"},
  *       {type:"b"}
  *   ]}]
