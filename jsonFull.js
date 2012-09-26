@@ -24,60 +24,59 @@ var tokenTypes = [
 ];
 
 var parseGrammar = {
-    'value': [
-        ['object'],
-        ['array'],
+    '_value': [
+        ['_object'],
+        ['_array'],
         ['string'],
         ['number'],
         ['atom']
     ],
-    'object': [
-        ['{', 'string', ':', 'value', 'object-tail']
+    '_object': [
+        ['{', 'string', ':', '_value', '_object-tail']
     ],
-    'object-tail': [
-        [',', 'string', ':', 'value', 'object-tail'],
+    '_object-tail': [
+        [',', 'string', ':', '_value', '_object-tail'],
         ['}']
     ],
-    'array': [
-        ['[', 'value', 'array-tail']
+    '_array': [
+        ['[', '_value', '_array-tail']
     ],
-    'array-tail': [
-        [',', 'value', 'array-tail'],
+    '_array-tail': [
+        [',', '_value', '_array-tail'],
         [']']
     ]
 };
 
 var attributeGrammar = analyzer.analyzer({
-    'value': function(tree) {
+    '_value': function(tree) {
         return this.analyze(tree[0]);
     },
-    'object': function(tree) {
+    '_object': function(tree) {
         var first_key = this.analyze(tree[1]);
         var first_value = this.analyze(tree[3]);
         var tail = this.analyze(tree[4]);
         tail[first_key] = first_value;
         return tail;
     },
-    'object-tail': function(tree) {
+    '_object-tail': function(tree) {
         if (tree[0].type === '}') {
             return {};
         }
-        return this.object(tree);
+        return this._object(tree);
     },
-    'array': function(tree) {
+    '_array': function(tree) {
         var first_value = this.analyze(tree[1]);
         var tail = this.analyze(tree[2]);
         tail.unshift(first_value);
         return tail;
     },
-    'array-tail': function(tree) {
+    '_array-tail': function(tree) {
         if (tree[0].type === ']') {
             return [];
         }
-        return this.array(tree);
+        return this._array(tree);
     },
     'string': function(node) {
-        // this is sort of cheating..
         return new Function('return ' + node.text + ';')();
     },
     'number': function(node) {
@@ -102,7 +101,7 @@ var tests = [
 
 for (var i = 0; i < tests.length; i++) {
     var tokens = scanner.scan(tokenTypes, tests[i]);
-    var tree = parser.parse(tokens, parseGrammar, "value");
+    var tree = parser.parse(tokens, parseGrammar, "_value");
     var results = attributeGrammar.apply(tree);
     console.log(JSON.stringify(results[0]));
 }

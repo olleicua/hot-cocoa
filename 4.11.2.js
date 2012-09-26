@@ -16,33 +16,33 @@ var tokenTypes = [
 ];
 
 var parseGrammar = {
-    'float': [
-        ['digits', '.', 'digits']
+    '_float': [
+        ['_digits', '.', '_digits']
     ],
-    'digits': [
-        ['digit', 'more-digits']
+    '_digits': [
+        ['digit', '_more-digits']
     ],
-    'more-digits': [
-        ['digits'],
+    '_more-digits': [
+        ['_digits'],
         []
     ]
 };
 
 var attributeGrammar = analyzer.analyzer({
-    'float': function(tree) {
+    '_float': function(tree) {
         var lhs = this.analyze(tree[0]);
         var rhs = this.analyze(tree[2]);
         var decimalPlaces = rhs.toString().length;
         return lhs + (rhs * Math.pow(10, -decimalPlaces));
     },
-    'digits': function(tree, beginning) {
+    '_digits': function(tree, beginning) {
         if (beginning === undefined) {
             beginning = 0;
         }
         var first_digit = parseInt(tree[0].text);
         return this.analyze(tree[1], (beginning * 10) + first_digit);
     },
-    'more-digits': function(tree, beginning) {
+    '_more-digits': function(tree, beginning) {
         if (tree.length === 0) {
             return beginning;
         }
@@ -59,7 +59,7 @@ var tests = [
 for (var i = 0; i < tests.length; i++) {
     var tokens = scanner.scan(tokenTypes, tests[i]);
     console.log(JSON.stringify(tokens));
-    var tree = parser.parse(tokens, parseGrammar, "float");
+    var tree = parser.parse(tokens, parseGrammar, "_float");
     console.log(JSON.stringify(tree));
     var results = attributeGrammar.apply(tree);
     console.log(JSON.stringify(results[0]));

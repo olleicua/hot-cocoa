@@ -23,23 +23,21 @@ var tokensTypes = [
 ];
 
 var grammar = {
-    'program': [
-        ['statement', 'program-tail']
+    '_program': [
+        ['_statement'],
+		['_statement', '_program']
     ],
-    'program-tail': [
-        ['newline', 'program'],
-        []
+    '_statement': [
+        ['_assignment', 'newline'],
+        ['_expression', 'newline']
     ],
-    'statement': [
-        ['assignment'],
-        ['expression']
+    '_assignment': [
+        ['variable', '=', '_expression']
     ],
-    'assignment': [
-        ['variable', '=', 'expression']
+    '_expression': [
+        ['_literal']
     ],
-    'expression': [
-        [''] // How do I differenciate between 'true' and 'true and false' in a
-             // single look-ahead recursive top down parser?
+    '_literal': [
     ]
 };
 
@@ -51,6 +49,6 @@ var tests = [
 
 for (var i = 0; i < tests.length; i++) {
     var tokens = scanner.scan(tokenTypes, tests[i]);
-    var tree = parser.parse(tokens, grammar, "value");
+    var tree = parser.parse(tokens, grammar, "_program");
     console.log(JSON.stringify(tree));
 }

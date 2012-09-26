@@ -14,14 +14,14 @@ var tokenTypes = [
 ];
 
 var grammar = {
-    'float': [
-        ['digits', '.', 'digits']
+    '_float': [
+        ['_digits', '.', '_digits']
     ],
-    'digits': [
-        ['digit', 'more-digits']
+    '_digits': [
+        ['digit', '_more-digits']
     ],
-    'more-digits': [
-        ['digits'],
+    '_more-digits': [
+        ['_digits'],
         []
     ]
 };
@@ -35,6 +35,6 @@ var tests = [
 for (var i = 0; i < tests.length; i++) {
     var tokens = scanner.scan(tokenTypes, tests[i]);
     console.log(JSON.stringify(tokens));
-    var tree = parser.parse(tokens, grammar, "float");
+    var tree = parser.parse(tokens, grammar, "_float");
     console.log(JSON.stringify(tree));
 }

@@ -21,25 +21,25 @@ var tokenTypes = [
 ];
 
 var grammar = {
-    'value': [
-        ['object'],
-        ['array'],
+    '_value': [
+        ['_object'],
+        ['_array'],
         ['string'],
         ['number'],
         ['atom']
     ],
-    'object': [
-        ['{', 'string', ':', 'value', 'object-tail']
+    '_object': [
+        ['{', 'string', ':', '_value', '_object-tail']
     ],
-    'object-tail': [
-        [',', 'string', ':', 'value', 'object-tail'],
+    '_object-tail': [
+        [',', 'string', ':', '_value', '_object-tail'],
         ['}']
     ],
-    'array': [
-        ['[', 'value', 'array-tail']
+    '_array': [
+        ['[', '_value', '_array-tail']
     ],
-    'array-tail': [
-        [',', 'value', 'array-tail'],
+    '_array-tail': [
+        [',', '_value', '_array-tail'],
         [']']
     ]
 };
@@ -58,6 +58,6 @@ var tests = [
 
 for (var i = 0; i < tests.length; i++) {
     var tokens = scanner.scan(tokenTypes, tests[i]);
-    var tree = parser.parse(tokens, grammar, "value");
+    var tree = parser.parse(tokens, grammar, "_value");
     console.log(JSON.stringify(tree));
 }
