@@ -38,11 +38,12 @@ var grammar = {
         ['variable', '=', '_expression']
     ],
     '_expression': [
-        ['_unambiguous-expression', 'newline'],
-        ['_unambiguous-expression', 'infix-operator', '_unambiguous-expression', 'newline']
+        ['_unambiguous-expression', 'infix-operator', '_unambiguous-expression'],
+        ['_unambiguous-expression']
     ],
 	'_unambiguous-expression': [
 		['literal'],
+		['variable'],
 		['(', '_expression', ')'],
 		['prefix-operator', '_unambiguous-expression']
 	]
@@ -51,7 +52,8 @@ var grammar = {
 var tests = [
     'true\n',
     'true and false\n',
-    'p = true\nq = false\n(p and q) implies (p or q)'
+    '(true and true) or false\n',
+    'p = true\nq = false\n(p and q) implies (p or q)\n'
 ];
 
 for (var i = 0; i < tests.length; i++) {
