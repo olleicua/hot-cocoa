@@ -9,6 +9,7 @@
 
 var scanner = require('./scanner.js');
 var parser = require('./parser.js');
+var analyzer = require('./analyzer.js');
 
 var tokenTypes = [
     { t:'infix-operator', re:/^(and|or|implies|xor|iff)\b/ },
@@ -19,16 +20,17 @@ var tokenTypes = [
     { t:')', re:/^\)/ },
     { t:'=', re:/^=/ },
     { t:'newline', re:/^\n/ },
-    { t:'whitespace', re:/^\s+/ }
+    { t:'whitespace', re:/^[ \t]+/ }
 ];
 
-var grammar = {
+var parseGrammar = {
     '_program': [
         ['_statement', '_program-tail'],
     ],
 	'_program-tail': [
-		['_program'],
-		[]
+		['newline', '_program'],
+		['newline', '_eof'],
+		['_eof']
 	],
     '_statement': [
         ['_assignment'],
@@ -49,17 +51,98 @@ var grammar = {
 	]
 };
 
-var tests = [
-    'true\n',
-    'true and false\n',
-    '(true and true) or false\n',
-    'p = true\nq = false\n(p and q) implies (p or q)\n'
-];
+var attributeGrammar = analyzer.analyzer({
+	'variables': {},
+    '_program': function(tree) {
+        console.log(this.analyze(tree[0]));
+		this.analyze(tree[1]);
+    },
+	'_program-tail': function(tree) {
+		if (tree[1] && tree[1].type === '_program') {
+			this.analyze(tree[1]);
+		}
+	},
+    '_statement': function(tree) {
+		return this.analyze(tree[0]);
+	},
+    '_assignment': function(tree) {
+		var expression = this.analyze(tree[2]);
+		this.variables[tree[0].text] = expression;
+		return expression;
+	},
+    '_expression': function(tree) {
+		if (tree[1] === undefined) {
+			return this.analyze(tree[0]);
+		}
+		switch (tree[1].text) {
+		case 'and' :
+			return this.analyze(tree[0]) && this.analyze(tree[2]);
+			break;
+		case 'or' :
+			return this.analyze(tree[0]) || this.analyze(tree[2]);
+			break;
+		case 'implies' :
+			return (! this.analyze(tree[0])) || this.analyze(tree[2]);
+			break;
+		case 'xor' :
+			return this.analyze(tree[0]) !== this.analyze(tree[2]);
+			break;
+		case 'iff' :
+			return this.analyze(tree[0]) === this.analyze(tree[2]);
+			break;
+		}
+	},
+	'_unambiguous-expression': function(tree) {
+		switch (tree[0].type) {
+		case 'literal' :
+			return tree[0].text === 'true';
+			break;
+		case 'variable' :
+			if (this.variables[tree[0].text] === undefined) {
+				throw "variable " + tree[0].text + " referenced before assignment";
+			}
+			return this.variables[tree[0].text];
+			break;
+		case '(' :
+			return this.analyze(tree[1]);
+			break;
+		case 'prefix-operator' :
+			if (tree[0].text === 'not') {
+				return ! this.analyze(tree[1]);
+			}
+			throw 'prefix operator other then "not" WAT!!'
+			break;
+		}
+	}
+});
 
-for (var i = 0; i < tests.length; i++) {
-    var tokens = scanner.scan(tokenTypes, tests[i]);
-    console.log('---');
-    console.log(JSON.stringify(tokens));
-    var tree = parser.parse(tokens, grammar, "_program");
-    console.log(JSON.stringify(tree));
+exports.scan = function(text) {
+	var tokens = scanner.scan(tokenTypes, text);
+	tokens.push({type:'_eof'});
+	return tokens;
+};
+exports.parse = function(tokens) {
+	return parser.parse(tokens, parseGrammar, "_program");
+};
+exports.analyze = function(tree) {
+	attributeGrammar.apply(tree);
+};
+
+if (! module.parent) {
+	var tests = [
+		'true',
+		'true and false',
+		'(true and true) or false',
+		'p = true\nq = false\n(p and q) implies (p or q)'
+	];
+
+	for (var i = 0; i < tests.length; i++) {
+		console.log('---');
+		var tokens = scanner.scan(tokenTypes, tests[i]);
+		tokens.push({type:'_eof'});
+		// console.log(JSON.stringify(tokens));
+		var tree = parser.parse(tokens, parseGrammar, "_program");
+		// console.log(JSON.stringify(tree));
+		attributeGrammar.apply(tree);
+	}
 }
