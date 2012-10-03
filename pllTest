@@ -1,0 +1,6 @@
+true
+true and false
+(true and true) or false
+p = true
+q = false
+(p and q) implies (p or q)
