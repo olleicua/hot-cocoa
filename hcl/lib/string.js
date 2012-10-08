@@ -10,7 +10,8 @@ var String = [];
 String.type = "string";
 
 exports.new_string = function(string) {
-	var result = Object.create(String); // TODO : do this right
+	var result = Object.create(String);
+	// TODO : do this right .. how?
 	result.value = new Function('return ' + string + ';')();
 	return result;
 }

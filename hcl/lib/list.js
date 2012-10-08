@@ -23,7 +23,36 @@ List.rest = function() {
 	result.zero_index = this.zero_index + 1;
 	return result;
 }
-
+List.toArray = function() { // is this necessary??
+	var result = [];
+	for (var i = this.zero_index; i < this.length; i++) {
+		result.push(this[i]);
+	}
+	return result;
+}
+List.map = function(func) {
+	var result = Object.create(List);
+	for (var i = this.zero_index; i < this.length; i++) {
+		result.push(func(this[i]));
+	}
+	return result;
+}
+List.filter = function(func) {
+	var result = Object.create(List);
+	for (var i = this.zero_index; i < this.length; i++) {
+		if (func(this[i])) {
+			result.push(this[i]);
+		}
+	}
+	return result;
+}
+List.reduce = function(func, init) {
+	var result = init;
+	for (var i = this.zero_index; i < this.length; i++) {
+		result = func(result, this[i]);
+	}
+	return result;
+}
 List.copy = function() {
 	// TODO
 }

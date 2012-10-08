@@ -135,7 +135,7 @@ exports.parse = function(tokens) {
 	return parser.parse(tokens, parseGrammar, "_program");
 };
 exports.analyze = function(tree) {
-	attributeGrammar.apply(tree);
+	return attributeGrammar.apply(tree)[0];
 };
 
 if (! module.parent) {
