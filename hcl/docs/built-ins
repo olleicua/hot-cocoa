@@ -1,0 +1,82 @@
+* Functional
+** range
+   Arguments: number
+   
+   Returns an ordered list of all non-negative integers below the
+   number.
+   
+   Examples:
+   (range 10) ; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+** map
+   Arguments: function, list
+   
+   Returns a copy of the list with the function applied to each
+   element.
+   
+   Examples:
+   (map (function (x) (* 2 x)) (range 4)) ; [0, 2, 4, 6]
+
+** filter
+   Arguments: function, list
+   
+   Returns a list containing the subset of the list which when passed
+   to the function return true.
+   
+   Examples:
+   (filter (function (x) (= 0 (mod x 2))) (range 4)) ; [0, 2]
+
+** reduce
+   Arguments: function, initial, list
+   
+   For each element of the list, iteratively replaces initial with the
+   result of (function initial element).
+   
+   Examples:
+   (reduce (function (a b) (+ a b)) 0 (range 4)) ; 10
+
+* Control Flow
+** if
+   Arguments: condition, true-expression, false-expression
+
+   Takes three arguments evaluates and returns the second if the first
+   is true otherwise evaluates and returns the third.
+   
+   Examples:
+   (if (= 1 1) "yes" "no") ; "yes"
+   (if (= 1 2) "yes" "no") ; "no"
+   
+** when
+   Arguments: condition, expressions
+
+   Takes at least two arguments evaluates those following the first
+   if the first is true and returns the last.
+   
+   Examples:
+   (when (= 1 1) "yes") ; "yes"
+   (if (= 1 2) "yes") ; null
+
+** cond
+   Arguments: pairs
+   
+   Each of the arguments are considdered in turn.  The first argument
+   whose first element is true has its second element evaluated and
+   returned.
+   
+   Examples:
+   (cond
+    (nil 1)
+    (t 2)) ; 2
+
+** each
+   Arguments: iterator, list, expressions
+   
+   Takes at least three arguments and runs a Python style for loop
+   of the form:
+   
+   for iterator in list:
+       expressions
+   
+   Examples:
+   (each word ["foo" "bar" "baz"]
+         (console.log word)) ; outputs "foo\nbar\nbaz\n
