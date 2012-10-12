@@ -1,0 +1,38 @@
+* HOT COCOA LISP
+  Hot Cocoa Lisp is a dialect of Lisp designed to be compiled into Javascript.
+** High Level Design Goals
+   - Provide a clean, intuitive interface to existing
+     Javascript libraries/frameworks
+   - Have the minimal syntax of Lisp
+   - Retain the good features of Javascript
+     (first-class functions with closures, Dynamic objects with prototypes,
+     Object literals).
+   - Leave out the bad features of Javascript.
+     (Global variables, type coersion, etc.)
+** Concerns
+   One of the major questions I still have is where my compiler will fall
+   between two particular extremes.  The first extreme is to simply generate
+   a Lisp parse tree, define eval (and realistically a few other things) in
+   Javascript, and simply run eval on the parse tree.  The second extreme is
+   generating Javascript code that looks nothing like the HCL code it came
+   from.  Because I'm not terribly interested in diving down the rabbit hole
+   of compiler optimization, I suspect I will fall a bit closer to the former.
+   
+   Another concern I have is how exactly I want to handle including code from
+   other files.  In code targeted at node, the node "require" method should work
+   fine:
+   
+   : var lib = require("./lib.js")
+   
+   could become
+   
+   : (define lib (require "./lib.hcl"))
+   
+   and in theory, I could even include source files from Javascript /or/ HCL
+   this way by looking at the file extension.  One possibility for browser
+   implementations is creating an analogous require function that loads source
+   libraries via AJAX and compiles them in the browser.  Alternately, multiple
+   compiled HCL files could be loaded via separate script tags and one could be
+   designated the "main" one (through a compiler directive or the like) and be
+   would then be able to access the others via a require method.
+   

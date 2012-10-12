@@ -21,6 +21,8 @@ exports.eval = function evaluate(expression) {
 		case 'list' :
 			// TODO : this is wrong
 			// this should be differentiated by quote..? think more here..
+			// also macros should be differenciated here
+			// ... quote is just a macro..
 			return func[args.get(0)];
 			break;
 		case 'object' :
