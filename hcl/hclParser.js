@@ -39,8 +39,10 @@ var parseGrammar = {
 		[]
 	],
     '_expression': [
-		['_puncuated-list'],
+		['_puncuated-list'], // should '[ or '{ be allowed..?
         ['_list'],
+        ['_data-list'], // this needs a better name
+        ['_object'],
         ['_atom']
     ],
 	'_puncuated-list': [
@@ -56,6 +58,20 @@ var parseGrammar = {
 		['_expression', '_list-tail'],
 		[')']
 	],
+	'_data-list': [
+		['[', '_data-list-tail']
+	],
+	'_data-list-tail': [
+		['_expression', '_data-list-tail'],
+		[']']
+	],
+	'_object': [
+		['{', '_object-tail']
+	],
+	'_object-tail': [
+		['_atom', '_expression', '_object-tail'],
+		['}']
+	],
 	'_atom': [
 		['word'],
 		['string'],
@@ -65,7 +81,7 @@ var parseGrammar = {
 
 // generate an array of HCL expressions
 var attributeGrammar = analyzer.analyzer({
-	// Do we want this??
+	// Do we want this here?? .. no?
 	// 'variables': {},
     '_program': function(tree) {
         return this.analyze(tree[1], this.analyze(tree[0]));
@@ -112,6 +128,38 @@ var attributeGrammar = analyzer.analyzer({
 		}
 		return result;
 	},
+    '_data-list': function(tree) {
+		var result = list.new_list();
+		result.push(word.new_word('list'));
+		result.push(this.analyze(tree[1]));
+		return result;
+	},
+	'_data-list-tail': function(tree, beginning) {
+		return this['_list-tail'](tree, beginning);
+	},
+    '_object': function(tree) {
+		var result = list.new_list();
+		result.push(word.new_word('object'));
+		result.push(this.analyze(tree[1]));
+		return result;
+	},
+    '_object-tail': function(tree, args) {
+		if (args) {
+			var key = args[0];
+			var value = args[1];
+		}
+		if (tree[0].type === '_atom') {
+			var x = this.analyze(tree[1]);
+			var result = this.analyze(tree[2], [this.analyze(tree[0]), this.analyze(tree[1])]);
+		} else {
+			var result = list.new_list();
+		}
+		if (key && value) {
+			result.unshift(value);
+			result.unshift(key);
+		}
+		return result;
+	},
     '_atom': function(tree) {
 		switch (tree[0].type) {
 		case 'word' :
@@ -140,7 +188,9 @@ exports.analyze = function(tree) {
 
 if (! module.parent) {
 	var tests = [
-		'(console.log "Hello World!")'
+		'(console.log "Hello World!")',
+		'[1 2 3 4 7e2]',
+		'{"a" 1 "b" 2}'
 	];
 
 	for (var i = 0; i < tests.length; i++) {
