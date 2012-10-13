@@ -137,7 +137,7 @@ var attributeGrammar = analyzer.analyzer({
 	'_data-list-tail': function(tree, beginning) {
 		return this['_list-tail'](tree, beginning);
 	},
-    '_object': function(tree) {
+    '_object': function(tree) { // should this just build the object??
 		var result = list.new_list();
 		result.push(word.new_word('object'));
 		result.push(this.analyze(tree[1]));

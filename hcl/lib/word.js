@@ -6,11 +6,12 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var Word = [];
-Word.type = "word";
+var _Word = {};
+_Word.type = "word";
+_String.toString = function() { return this.name; };
 
 exports.new_word = function(word) {
-	var result = Object.create(Word);
+	var result = Object.create(_Word);
 	result.name = word;
 	return result;
 }

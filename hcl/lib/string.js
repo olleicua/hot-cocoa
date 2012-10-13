@@ -6,11 +6,12 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var String = [];
-String.type = "string";
+var _String = {};
+_String.type = "string";
+_String.toString = function() { return this.value; };
 
 exports.new_string = function(string) {
-	var result = Object.create(String);
+	var result = Object.create(_String);
 	// TODO : do this right .. how?
 	result.value = new Function('return ' + string + ';')();
 	return result;

@@ -6,12 +6,13 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var Number = {};
-Number.type = "number";
+var _Number = {};
+_Number.type = "number";
+_String.toString = function() { return this.text; };
 
 exports.new_number = function(number) {
 	// TODO : add fractions (e.g. "1/2")
-	var result = Object.create(Number);
+	var result = Object.create(_Number);
 	result.value = parseFloat(number);
 	result.text = number.toString();
 	return result;
