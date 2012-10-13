@@ -4,8 +4,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var scanner = require('./scanner.js');
-var parser = require('./parser.js');
+var scanner = require('../scanner.js');
+var parser = require('../parser.js');
 
 var tokenTypes = [
     { t:'atom', re:/^(true|false|null)/ },

@@ -7,9 +7,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var scanner = require('./scanner.js');
-var parser = require('./parser.js');
-var analyzer = require('./analyzer.js');
+var scanner = require('../scanner.js');
+var parser = require('../parser.js');
+var analyzer = require('../analyzer.js');
 
 var tokenTypes = [
     { t:'infix-operator', re:/^(and|or|implies|xor|iff)\b/ },
