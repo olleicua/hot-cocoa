@@ -8,8 +8,17 @@
 
 var _List = [];
 _List.type = "list";
-_String.toString = function() { return this.text; };
 _List.zero_index = 0;
+_List.toString = function() {
+	return "(" + this.values.map(function(values) {
+		return values.toString();
+	}).join(" ") + ")";
+};
+_List.copy = function() { // deep copy
+	return this.map(function(value) {
+		return value.copy();
+	});
+}
 _List.get = function(index) {
 	if (index.type === 'number') {
 		return this.values[this.zero_index + index.value];
@@ -40,16 +49,14 @@ _List.toArray = function() { // is this necessary??
 	return result;
 }
 _List.map = function(func) {
-	var result = Object.create(_List);
-	result.values = [];
+	var result = new_list();
 	for (var i = this.zero_index; i < this.values.length; i++) {
 		result.values.push(func(this.values[i]));
 	}
 	return result;
 }
 _List.filter = function(func) {
-	var result = Object.create(_List);
-	result.values = [];
+	var result = new_list();
 	for (var i = this.zero_index; i < this.values.length; i++) {
 		if (func(this.values[i])) {
 			result.values.push(this.values[i]);
@@ -63,9 +70,6 @@ _List.reduce = function(func, init) {
 		result = func(result, this.values[i]);
 	}
 	return result;
-}
-_List.copy = function() {
-	// TODO
 }
 
 exports.new_list = function() {

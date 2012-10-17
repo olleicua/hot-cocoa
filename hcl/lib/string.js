@@ -9,10 +9,11 @@
 var _String = {};
 _String.type = "string";
 _String.toString = function() { return this.value; };
+_String.copy = function() { return new_string(this.value); }
 
 exports.new_string = function(string) {
 	var result = Object.create(_String);
-	// TODO : do this right .. how?
+	// TODO : do this right .. how? .. maybe not..
 	result.value = new Function('return ' + string + ';')();
 	return result;
 }

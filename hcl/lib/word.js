@@ -8,7 +8,8 @@
 
 var _Word = {};
 _Word.type = "word";
-_String.toString = function() { return this.name; };
+_Word.toString = function() { return this.name; };
+_Word.copy = function() { return new_word(this.name); }
 
 exports.new_word = function(word) {
 	var result = Object.create(_Word);
