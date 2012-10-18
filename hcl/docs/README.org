@@ -1,9 +1,10 @@
 * HOT COCOA LISP
-  Hot Cocoa Lisp is a dialect of Lisp designed to be compiled into Javascript.
+  Hot Cocoa Lisp is a dialect of Lisp designed to be compiled into
+  or interpreted in Javascript.
 ** High Level Design Goals
    - Provide a clean, intuitive interface to existing
      Javascript libraries/frameworks
-   - Have the minimal syntax of Lisp
+   - Use the minimal syntax of Lisp
    - Retain the good features of Javascript
      (first-class functions with closures, Dynamic objects with prototypes,
      Object literals).

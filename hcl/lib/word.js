@@ -9,7 +9,10 @@
 var _Word = {};
 _Word.type = "word";
 _Word.toString = function() { return this.name; };
-_Word.copy = function() { return new_word(this.name); }
+_Word.copy = function() { return new_word(this.name); };
+_Word.eval = function() {
+    // TODO: access the current scope
+};
 
 exports.new_word = function(word) {
 	var result = Object.create(_Word);

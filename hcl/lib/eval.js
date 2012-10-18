@@ -6,6 +6,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+// TODO: make this call the eval method of the object.
 exports.eval = function evaluate(expression) {
 	switch (expression.type) {
 	case 'list' :

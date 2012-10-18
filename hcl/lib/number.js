@@ -9,7 +9,8 @@
 var _Number = {};
 _Number.type = "number";
 _Number.toString = function() { return this.text; };
-_Number.copy = function() { return new_number(this.value); }
+_Number.copy = function() { return new_number(this.value); }; 
+_Number.eval = function() { return this; };
 
 exports.new_number = function(number) {
 	// TODO : add fractions (e.g. "1/2")

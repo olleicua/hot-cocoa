@@ -10,6 +10,7 @@ var _String = {};
 _String.type = "string";
 _String.toString = function() { return this.value; };
 _String.copy = function() { return new_string(this.value); }
+_String.eval = function() { return this; };
 
 exports.new_string = function(string) {
 	var result = Object.create(_String);

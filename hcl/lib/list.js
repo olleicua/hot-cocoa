@@ -14,6 +14,9 @@ _List.toString = function() {
 		return values.toString();
 	}).join(" ") + ")";
 };
+_List.eval = function() {
+    return this.first.eval().call(this.rest());
+}
 _List.copy = function() { // deep copy
 	return this.map(function(value) {
 		return value.copy();

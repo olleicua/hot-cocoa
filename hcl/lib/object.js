@@ -8,6 +8,7 @@
 
 var _Object = {};
 _Object.type = "object";
+_Object.eval = function() { return this; };
 _Object.get = function(key) { 
 	// currently the keys are simply the toString of the specified object here
 	// but parsing is forcing it to be a string.  Should it be limitted to
