@@ -6,7 +6,7 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var _List = [];
+var _List = {};
 _List.type = "list";
 _List.zero_index = 0;
 _List.toString = function() {
