@@ -15,7 +15,7 @@ _Function.toString = function() {
 	}).join(" ") + ")";
 };
 _Function.eval = function() { return this; };
-_Function.copy = function() { 
+_Function.copy = function() { // should this ever happen??  immutables maybe can just be returned..?
     return new_function(this.args.copy(), this.body.copy());
 }
 _Function.call = function(args) {

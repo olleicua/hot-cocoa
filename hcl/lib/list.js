@@ -18,14 +18,17 @@ _List.eval = function() {
     return this.first.eval().call(this.rest());
 }
 _List.copy = function() { // deep copy
-	return this.map(function(value) {
-		return value.copy();
+    return this.map(function(value) {
+	    return value.copy();
 	});
 }
 _List.get = function(index) {
-	if (index.type === 'number') {
-		return this.values[this.zero_index + index.value];
-	} // should return undefined be explicit?
+    while (index < 0) { // make negatives wrap around
+	index += this.size();
+    }
+    if (index.type === 'number') {
+	return this.values[this.zero_index + index.value];
+    } // should return undefined be explicit?
 }
 _List.set = function(index, value) {
 	if (index.type === 'number') {

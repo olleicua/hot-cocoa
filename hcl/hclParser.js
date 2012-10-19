@@ -15,6 +15,7 @@ var parser = require('../parser.js');
 var analyzer = require('../analyzer.js');
 
 var tokenTypes = [ // TODO: add T and NIL
+    { t:'boolean', re:/^(true|false|null|undefined)/ },
     { t:'number', re:/^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][-+]?[0-9]+)?/ },
     { t:'string', re:/^"(\\"|[^"])*"/ },
     { t:'word', re:/^[a-zA-Z_!?$%&*+-=\/<>^~][a-zA-Z0-9_!?$%&*+-=\/<>^~]*\b/ },
@@ -75,7 +76,8 @@ var parseGrammar = {
 	'_atom': [
 		['word'],
 		['string'],
-		['number']
+		['number'],
+		['boolean']
 	]
 };
 
@@ -161,7 +163,7 @@ var attributeGrammar = analyzer.analyzer({
 		return result;
 	},
     '_atom': function(tree) {
-		switch (tree[0].type) {
+		switch (tree[0].type) { // perhaps without a switch??
 		case 'word' :
 			return word.new_word(tree[0].text);
 			break;
@@ -170,6 +172,10 @@ var attributeGrammar = analyzer.analyzer({
 			break;
 		case 'number' :
 			return number.new_number(tree[0].text);
+			break;
+		}
+		case 'boolean' :
+			return boolean.new_boolean(tree[0].text);
 			break;
 		}
 	},

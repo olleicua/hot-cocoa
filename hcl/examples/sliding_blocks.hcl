@@ -1,6 +1,8 @@
 ;; This example has been translated from 
 ;; http://cs.marlboro.edu/courses/fall2012/web/examples/javascript/example5.js
 
+;; this needs more thought...
+
 ((function ()
 		   
 		   ;; CONSTANTS

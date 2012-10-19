@@ -1,0 +1,183 @@
+* Math
+** +
+   Arguments: numbers
+   
+   Returns the sum of the arguments.
+   
+   Examples:
+   (+ 1 2) ; 3
+   (+ 4 6 10) ; 20
+
+** -
+   Arguments: numbers
+   
+   If one argument is given, return the opposite of it.
+   If more are given, subtract the sum of the numbers after
+   the first from the first.
+   
+   Examples:
+   (- 2) ; -2
+   (- 7 10) ; -3
+   (- 100 31 6) ; 63
+   
+** *
+   Arguments: numbers
+   
+   Returns the prduct of the arguments.
+   
+   Examples:
+   (* 1 2) ; 2
+   (* 4 2 10) ; 80
+
+** /
+   Arguments: numbers
+   
+   Divide first number by the prduct of the numbers after the first.
+   
+   Examples:
+   (/ 240 10) ; 24
+   (/ 350 5 7) ; 10
+
+** ^
+   Arguments: base exponent
+   
+   Return the base taken to the power of the exponent
+   
+   Examples:
+   (^ 9 2) ; 81
+   (^ 2 4) ; 16
+
+** mod
+   Arguments: number base
+   
+   Returns the number mod the base.
+
+   Examples:
+   (mod 123 10) ; 3
+   (mod 35 7) ; 0
+
+* Assignement
+** set
+   Arguments: name value
+   
+   Evaluates the second argument and binds the result to the name of
+   the first.
+   
+   Examples:
+   (set x (+ 3 4))
+   x ; 7
+
+** assign
+   Arguments container [ accessor ] value
+   
+   Evaluate the first argument, if the result is a word, evalutes the
+   second and binds the result of the second to the name of the result
+   of the first.  If the first argument evaluates to an list or object,
+   then the second argument is not evaluated and is used as an index or
+   or key into the list or object to the place where the third argument
+   (which is evaluated) is bound.
+   
+   Examples:
+   (assign 'x (+ 3 4))
+   x ; 7
+   (set mylist [1 2 3])
+   (assign mylist 3 7)
+   mylist ; [1 2 3 7]
+   (set myobject {hair "red" eyes "blue"})
+   (assign myobject eyes "green")
+   (. myobject eyes) ; "green"
+
+** let
+   Arguments: assignments body
+   
+   Assignments should be a list of even length.
+   A new scope is created inwhich every other value in the assignments list
+   is assigned to the word before it.
+   
+   Examples:
+   (set x 7)
+   (let (x 10
+         y 8)
+      (+ x y)) ; 18
+   x ; 7
+   y ; undefined
+
+* Functional
+** range
+   Arguments: number
+   
+   Returns an ordered list of all non-negative integers below the
+   number.
+   
+   Examples:
+   (range 10) ; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+** map
+   Arguments: function, list
+   
+   Returns a copy of the list with the function applied to each
+   element.
+   
+   Examples:
+   (map (function (x) (* 2 x)) (range 4)) ; [0, 2, 4, 6]
+
+** filter
+   Arguments: function, list
+   
+   Returns a list containing the subset of the list which when passed
+   to the function return true.
+   
+   Examples:
+   (filter (function (x) (= 0 (mod x 2))) (range 4)) ; [0, 2]
+
+** reduce
+   Arguments: function, initial, list
+   
+   For each element of the list, iteratively replaces initial with the
+   result of (function initial element).
+   
+   Examples:
+   (reduce (function (a b) (+ a b)) 0 (range 4)) ; 10
+
+* Control Flow
+** if
+   Arguments: condition, true-expression, false-expression
+
+   Takes three arguments evaluates and returns the second if the first
+   is true otherwise evaluates and returns the third.
+   
+   Examples:
+   (if (= 1 1) "yes" "no") ; "yes"
+   (if (= 1 2) "yes" "no") ; "no"
+   
+** when
+   Arguments: condition, expressions
+
+   Takes at least two arguments evaluates those following the first
+   if the first is true and returns the last.
+   
+   Examples:
+   (when (= 1 1) "yes") ; "yes"
+   (if (= 1 2) "yes") ; null
+
+** cond
+   Arguments: pairs
+   
+   Each of the arguments are considdered in turn.  The first argument
+   whose first element is true has its second element evaluated and
+   returned.
+   
+   Examples:
+   (cond
+    (nil 1)
+    (t 2)) ; 2
+
+** each
+   Arguments: list, function
+   
+   Calls the function on each element of the list
+   
+   Examples:
+   (each ["foo" "bar" "baz"]
+         (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n
+
