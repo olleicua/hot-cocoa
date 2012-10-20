@@ -6,14 +6,28 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+var boolean = require('./boolean.js');
+
 var _List = {};
 _List.type = "list";
 _List.zero_index = 0;
-_List.toString = function() {
+_List.toString = function() { // should this be printed with '['s?
 	return "(" + this.values.map(function(values) {
 		return values.toString();
 	}).join(" ") + ")";
 };
+_List.equivalent = function(other) {
+	if (this.size() !== other.size()) {
+		return false;
+	}
+	for (var i = 0; i < this.size(); i++) {
+		if (! this.get(i).equivalent(other.get(i))) {
+			return false;
+		}
+	}
+	return true;
+};
+_List.bool = function() { return boolean.new(this.size() !== 0); } ;
 _List.eval = function() {
     return this.first.eval().call(this.rest());
 }
@@ -27,7 +41,7 @@ _List.get = function(index) {
 	index += this.size();
     }
     if (index.type === 'number') {
-	return this.values[this.zero_index + index.value];
+		return this.values[this.zero_index + index.value];
     } // should return undefined be explicit?
 }
 _List.set = function(index, value) {
@@ -78,7 +92,7 @@ _List.reduce = function(func, init) {
 	return result;
 }
 
-exports.new_list = function() {
+var new_list = function() {
 	var result = Object.create(_List);
 	result.values = [];
 	for (var i = 0; i < arguments.length; i++) {
@@ -86,3 +100,5 @@ exports.new_list = function() {
 	}
 	return result;
 }
+
+exports.new = new_list;

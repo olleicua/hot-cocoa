@@ -6,11 +6,16 @@
    - false
    - null
    
-   false and null are falsy.
+   false and null are falsey.
 
 ** Number
+   Numbers are Javascript numbers.
+   
+   ?? do I want fractions such as 1/2 to be literals..?
    
 ** String
+   Strings are Javascript strings.
+   
 ** Word
 ** List
 ** Object

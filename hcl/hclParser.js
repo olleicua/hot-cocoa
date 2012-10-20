@@ -10,12 +10,13 @@ var number = require('./lib/number.js');
 var string = require('./lib/string.js');
 var word = require('./lib/word.js');
 var list = require('./lib/list.js');
+var boolean = require('./lib/list.js');
 var scanner = require('../scanner.js');
 var parser = require('../parser.js');
 var analyzer = require('../analyzer.js');
 
 var tokenTypes = [ // TODO: add T and NIL
-    { t:'boolean', re:/^(true|false|null|undefined)/ },
+    { t:'boolean', re:/^(true|false|null)/ },
     { t:'number', re:/^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][-+]?[0-9]+)?/ },
     { t:'string', re:/^"(\\"|[^"])*"/ },
     { t:'word', re:/^[a-zA-Z_!?$%&*+-=\/<>^~][a-zA-Z0-9_!?$%&*+-=\/<>^~]*\b/ },
@@ -101,16 +102,16 @@ var attributeGrammar = analyzer.analyzer({
 		return this.analyze(tree[0]);
 	},
     '_puncuated-list': function(tree) {
-		var result = list.new_list();
+		var result = list.new();
 		switch (tree[0]) {
 		case '\'' :
-			result.push(word.new_word('quote'));
+			result.push(word.new('quote'));
 			break;
 		case '`' :
-			result.push(word.new_word('quaziquote'));
+			result.push(word.new('quaziquote'));
 			break;
 		case ',' :
-			result.push(word.new_word('unquote'));
+			result.push(word.new('unquote'));
 			break;
 		}
 		result.push(this.analyze(tree[1]));
@@ -123,7 +124,7 @@ var attributeGrammar = analyzer.analyzer({
 		if (tree[0].type === '_expression') {
 			var result = this.analyze(tree[1], this.analyze(tree[0]));
 		} else {
-			var result = list.new_list();
+			var result = list.new();
 		}
 		if (beginning) {
 			result.unshift(beginning);
@@ -131,8 +132,8 @@ var attributeGrammar = analyzer.analyzer({
 		return result;
 	},
     '_data-list': function(tree) {
-		var result = list.new_list();
-		result.push(word.new_word('list'));
+		var result = list.new();
+		result.push(word.new('list'));
 		result.push(this.analyze(tree[1]));
 		return result;
 	},
@@ -140,8 +141,8 @@ var attributeGrammar = analyzer.analyzer({
 		return this['_list-tail'](tree, beginning);
 	},
     '_object': function(tree) { // should this just build the object??
-		var result = list.new_list();
-		result.push(word.new_word('object'));
+		var result = list.new();
+		result.push(word.new('object'));
 		result.push(this.analyze(tree[1]));
 		return result;
 	},
@@ -154,7 +155,7 @@ var attributeGrammar = analyzer.analyzer({
 			var x = this.analyze(tree[1]);
 			var result = this.analyze(tree[2], [this.analyze(tree[0]), this.analyze(tree[1])]);
 		} else {
-			var result = list.new_list();
+			var result = list.new();
 		}
 		if (key && value) {
 			result.unshift(value);
@@ -165,17 +166,17 @@ var attributeGrammar = analyzer.analyzer({
     '_atom': function(tree) {
 		switch (tree[0].type) { // perhaps without a switch??
 		case 'word' :
-			return word.new_word(tree[0].text);
+			return word.new(tree[0].text);
 			break;
 		case 'string' :
-			return string.new_string(tree[0].text);
+			return string.new(tree[0].text);
 			break;
 		case 'number' :
-			return number.new_number(tree[0].text);
+			return number.new(tree[0].text);
 			break;
 		}
 		case 'boolean' :
-			return boolean.new_boolean(tree[0].text);
+			return boolean.new(tree[0].text);
 			break;
 		}
 	},

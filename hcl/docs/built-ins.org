@@ -1,6 +1,6 @@
 * Math
 ** +
-   Arguments: numbers
+   Arguments: numbers*
    
    Returns the sum of the arguments.
    
@@ -9,11 +9,10 @@
    (+ 4 6 10) ; 20
 
 ** -
-   Arguments: numbers
+   Arguments: numbers*
    
-   If one argument is given, return the opposite of it.
-   If more are given, subtract the sum of the numbers after
-   the first from the first.
+   If one argument is given, return the opposite of it. If more are
+   given, subtract the sum of the numbers after the first from the first.
    
    Examples:
    (- 2) ; -2
@@ -21,7 +20,7 @@
    (- 100 31 6) ; 63
    
 ** *
-   Arguments: numbers
+   Arguments: numbers*
    
    Returns the prduct of the arguments.
    
@@ -30,9 +29,9 @@
    (* 4 2 10) ; 80
 
 ** /
-   Arguments: numbers
+   Arguments: numerator denominators*
    
-   Divide first number by the prduct of the numbers after the first.
+   Divide first number by the product of the numbers after the first.
    
    Examples:
    (/ 240 10) ; 24
@@ -41,7 +40,7 @@
 ** ^
    Arguments: base exponent
    
-   Return the base taken to the power of the exponent
+   Return the base taken to the power of the exponent.
    
    Examples:
    (^ 9 2) ; 81
@@ -56,6 +55,77 @@
    (mod 123 10) ; 3
    (mod 35 7) ; 0
 
+* Boolean
+** =
+   Arguments: values*
+   
+   Returns true only if all arguments are the same type and equivalent
+   value.
+   
+   Examples:
+   (= 1 2) ; false
+   (= "x" "x") ; true
+   (= 'x "x") ; false
+
+** is?
+   Arguments: values*
+   
+   Returns true only if all arguments refer to the same object.
+   
+   Examples:
+   (is? 1 1) ; false
+   (set x 1)
+   (is? x x) ; true
+
+** not
+   Argumets: value
+   
+   Returns false if the argument is truthy and true if it's falsey.
+   
+   Examples:
+   (not true) ; false
+
+** and
+   Argumets: values*
+   
+   Arguments are evaluated sequentionally returning the first falsey
+   value found.  If none are found then the last value is returned.
+   
+   Examples:
+   (and true true) ; true
+   (set x 'off)
+   (set foo (# (bar)
+               (and bar (set x 'on))))
+   (foo false)
+   x ; off
+   (foo true)
+   x ; on
+
+** or
+   Argumets: values*
+   
+   Arguments are evaluated sequentionally returning the first truthy
+   # value found.  If none are found then the last value is returned.
+   
+   Examples:
+   (or true false) ; true
+   (set x 'off)
+   (set foo (# (bar)
+               (or bar (set x 'on))))
+   (foo true)
+   x ; off
+   (foo false)
+   x ; on
+
+** xor
+   Argumets: value1 value2
+   
+   Return true if one argument is truthy and the other falsey.
+   Otherwise return false;
+   
+   Examples:
+   (xor true false) ; true
+   
 * Assignement
 ** set
    Arguments: name value
@@ -90,9 +160,9 @@
 ** let
    Arguments: assignments body
    
-   Assignments should be a list of even length.
-   A new scope is created inwhich every other value in the assignments list
-   is assigned to the word before it.
+   Assignments should be a list of even length. A new scope is created
+   inwhich every other value in the assignments list is assigned to
+   the word before it.
    
    Examples:
    (set x 7)
@@ -179,5 +249,5 @@
    
    Examples:
    (each ["foo" "bar" "baz"]
-         (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n
+         (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n"
 

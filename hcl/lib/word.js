@@ -6,16 +6,22 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+var boolean = require('./boolean.js');
+
 var _Word = {};
 _Word.type = "word";
 _Word.toString = function() { return this.name; };
+_Word.equivalent = function(other) { return other.name === this.name; };
+_Word.bool = function() { return boolean.new(true); };
 _Word.copy = function() { return new_word(this.name); };
 _Word.eval = function() {
     // TODO: access the current scope
 };
 
-exports.new_word = function(word) {
+var new_word = function(word) {
 	var result = Object.create(_Word);
 	result.name = word;
 	return result;
 }
+
+exports.new = new_word;
