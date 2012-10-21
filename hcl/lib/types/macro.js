@@ -26,7 +26,8 @@ _Macro.copy = function() {
 	return new_function(this.args.copy(), this.body.copy());
 }
 _Macro.call = function(args) {
-    // TODO: think about what is evaled when.  Should a wrapper object eval to a javascript literal..?
+    // TODO: think about what is evaled when.
+	// Should a wrapper object eval to a javascript literal..?
     return this.func.apply(undefined, args.values);
 }
 

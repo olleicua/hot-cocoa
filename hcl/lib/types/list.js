@@ -10,11 +10,18 @@ var boolean = require('./boolean.js');
 
 var _List = {};
 _List.type = "list";
+_List.bare = function() {
+	var result = [];
+	for (var i = this.zero_index; i < this.values.length; i++) {
+		result.push(this.values[i].bare());
+	}
+	return result;
+}
 _List.zero_index = 0;
 _List.toString = function() { // should this be printed with '['s?
-	return "(" + this.values.map(function(values) {
-		return values.toString();
-	}).join(" ") + ")";
+	return "(" + this.reduce(function(value1, value2) {
+		return value1.toString() + " " + value2.toString();
+	}) + ")";
 };
 _List.equivalent = function(other) {
 	if (this.size() !== other.size()) {
@@ -37,11 +44,12 @@ _List.copy = function() { // deep copy
 	});
 }
 _List.get = function(index) {
-    while (index < 0) { // make negatives wrap around
-	index += this.size();
-    }
     if (index.type === 'number') {
-		return this.values[this.zero_index + index.value];
+		var _index = index.value
+		while (_index < 0) { // make negatives wrap around
+			_index += this.size();
+		}
+		return this.values[this.zero_index + _index];
     } // should return undefined be explicit?
 }
 _List.set = function(index, value) {
@@ -61,13 +69,6 @@ _List.rest = function() {
 _List.size = function() {
 	return this.values.length - this.zero_index;
 }
-_List.toArray = function() { // is this necessary??
-	var result = [];
-	for (var i = this.zero_index; i < this.values.length; i++) {
-		result.push(this.values[i]);
-	}
-	return result;
-}
 _List.map = function(func) {
 	var result = new_list();
 	for (var i = this.zero_index; i < this.values.length; i++) {
@@ -84,9 +85,9 @@ _List.filter = function(func) {
 	}
 	return result;
 }
-_List.reduce = function(func, init) {
-	var result = init;
-	for (var i = this.zero_index; i < this.values.length; i++) {
+_List.reduce = function(func) {
+	var result = this.first();
+	for (var i = this.zero_index + 1; i < this.values.length; i++) {
 		result = func(result, this.values[i]);
 	}
 	return result;

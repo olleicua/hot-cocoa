@@ -31,12 +31,16 @@ _Function.copy = function() {
 	return new_function(this.args.copy(), this.body.copy());
 }
 _Function.call = function(args) {
-    // TODO: think about what is evaled when.  Should a wrapper object eval to a javascript literal..?
+    // TODO: think about what is evaled when.  Should a wrapper object eval to a
+	// javascript literal..?
     return this.func.apply(undefined, args.values);
 }
 
 var new_function = function(args, body) {
     var result = Object.create(_Function);
+	if (typeof(args) === 'function') {
+		// TODO
+	}
     // TODO: fill this in
     return result;
 }

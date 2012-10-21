@@ -10,7 +10,13 @@ var boolean = require('./boolean.js');
 
 var _Object = {};
 _Object.type = "object";
-_Object.bare = function() {	return this.object; };
+_Object.bare = function() {
+	var result = {};
+	for (var i = 0; i < this.keys.length; i++) {
+		result[this.keys[i]] = this.get(this.keys[i]).bare();
+	}
+	return result;
+};
 _Object.toString = function() {
 	var that = this;
 	return "{" + this.keys.map(function(key) {

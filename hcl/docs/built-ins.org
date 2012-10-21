@@ -189,7 +189,7 @@
    element.
    
    Examples:
-   (map (function (x) (* 2 x)) (range 4)) ; [0, 2, 4, 6]
+   (map (# (x) (* 2 x)) (range 4)) ; [0, 2, 4, 6]
 
 ** filter
    Arguments: function, list
@@ -198,16 +198,15 @@
    to the function return true.
    
    Examples:
-   (filter (function (x) (= 0 (mod x 2))) (range 4)) ; [0, 2]
+   (filter (# (x) (= 0 (mod x 2))) (range 4)) ; [0, 2]
 
 ** reduce
-   Arguments: function, initial, list
+   Arguments: function, list
    
-   For each element of the list, iteratively replaces initial with the
-   result of (function initial element).
+   Does reduce on the list.
    
    Examples:
-   (reduce (function (a b) (+ a b)) 0 (range 4)) ; 10
+   (reduce (# (a b) (+ a b)) (range 4)) ; 10
 
 * Control Flow
 ** if
