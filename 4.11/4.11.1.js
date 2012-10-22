@@ -5,8 +5,8 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var scanner = require('./scanner.js');
-var parser = require('./parser.js');
+var scanner = require('../scanner.js');
+var parser = require('../parser.js');
 
 var tokenTypes = [
     { t:'digit', re:/^\d/ },
@@ -26,15 +26,17 @@ var grammar = {
     ]
 };
 
-var tests = [
-    '1.0',
-    '2.1234',
-    '6345.904'
-];
+if (! module.parent) {
+	var tests = [
+		'1.0',
+		'2.1234',
+		'6345.904'
+	];
 
-for (var i = 0; i < tests.length; i++) {
-    var tokens = scanner.scan(tokenTypes, tests[i]);
-    console.log(JSON.stringify(tokens));
-    var tree = parser.parse(tokens, grammar, "_float");
-    console.log(JSON.stringify(tree));
+	for (var i = 0; i < tests.length; i++) {
+		var tokens = scanner.scan(tokenTypes, tests[i]);
+		console.log(JSON.stringify(tokens));
+		var tree = parser.parse(tokens, grammar, "_float");
+		console.log(JSON.stringify(tree));
+	}
 }

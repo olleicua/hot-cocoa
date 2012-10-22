@@ -87,21 +87,28 @@ var attributeGrammar = analyzer.analyzer({
     }
 });
 
-var tests = [
-    'true',
-    '"crazystring"',
-    '"this string has escapes in it \\" \\\\ \\\/"',
-    '10.34',
-    '982e-10',
-    '1.2e3',
-    '[1,2,3]',
-    '{"x":1, "y":[true, false, null]}',
-    '[{"a":1, "b":2}, {"a":[null, null, null], "b":4.5}]'
-];
+exports.scan = function(text) { return scanner.scan(tokenTypes, text); };
+exports.parse = function(tokens) {
+	return parser.parse(tokens, parseGrammar, "_value"); };
+exports.analyze = function(tree) { return attributeGrammar.apply(tree); };
 
-for (var i = 0; i < tests.length; i++) {
-    var tokens = scanner.scan(tokenTypes, tests[i]);
-    var tree = parser.parse(tokens, parseGrammar, "_value");
-    var results = attributeGrammar.apply(tree);
-    console.log(JSON.stringify(results[0]));
+if (! module.parent) {
+	var tests = [
+		'true',
+		'"crazystring"',
+		'"this string has escapes in it \\" \\\\ \\\/"',
+		'10.34',
+		'982e-10',
+		'1.2e3',
+		'[1,2,3]',
+		'{"x":1, "y":[true, false, null]}',
+		'[{"a":1, "b":2}, {"a":[null, null, null], "b":4.5}]'
+	];
+
+	for (var i = 0; i < tests.length; i++) {
+		var tokens = scanner.scan(tokenTypes, tests[i]);
+		var tree = parser.parse(tokens, parseGrammar, "_value");
+		var results = attributeGrammar.apply(tree);
+		console.log(JSON.stringify(results[0]));
+	}
 }

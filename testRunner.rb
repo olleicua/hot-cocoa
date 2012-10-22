@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-def getChildren dir, pattern=/./, dir_pattern=nil
+def getChildren dir, file_pattern=/./, dir_pattern=nil
   
   # validate directory
   raise "#{dir} is not a directory" unless File.directory? dir
@@ -10,14 +10,14 @@ def getChildren dir, pattern=/./, dir_pattern=nil
     
     # recursively add the contents of directories
     (File.directory? "#{dir}/#{file}") ?
-    (getChildren "#{dir}/#{file}", pattern, dir_pattern) :
+    (getChildren "#{dir}/#{file}", file_pattern, dir_pattern) :
       
       # dir matches
       (dir_pattern and dir_pattern.match dir) ?
     "#{dir}/#{file}" :
       
       # file matches
-      (pattern.match file) ?
+      (file_pattern.match file) ?
     "#{dir}/#{file}" :
       
       # file doesn't match
