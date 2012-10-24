@@ -29,16 +29,7 @@ for (var i = 0; i < test_inputs.length; i++) {
     var tokens = json.scan(test_inputs[i]);
     var tree = json.parse(tokens);
     var results = json.analyze(tree);
-	switch (typeof(results[0])) {
-	case 'number' :
-		tests.push([results[0], parseFloat(test_inputs[i])]);
-		break;
-	case 'object' :
-		tests.push([anagrams(JSON.stringify(results[0]), test_inputs[i]), true]);
-		break;
-	default :
-		tests.push([JSON.stringify(results[0]), test_inputs[i]]);
-	}
+    tests.push([results[0], (new Function('return ' + test_inputs[i] + ';'))()]);
 }
 
 require('../test.js').test(tests);

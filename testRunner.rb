@@ -26,7 +26,15 @@ def getChildren dir, file_pattern=/./, dir_pattern=nil
   end.delete_if{|f| f.nil?}.flatten
 end
 
+total = 0
+passed = 0
 (getChildren ".", /\.test\./, /\/tests\b/).each do |file|
   puts "\n#{file}"
-  puts `node #{file}`
+  test = `node #{file}`
+  puts test
+  _,t,p = (/Passed (\d+) of (\d+) tests\./.match test).to_a
+  total += t.to_i
+  passed += p.to_i
 end
+
+puts "\n ---\nPasses #{total} of #{passed} tests."

@@ -19,6 +19,11 @@ var tests = [
 	[ list.new(
 		word.new("foo"),
 		word.new("bar"),
+		word.new("baz")).rest().bare(),
+	  ["bar", "baz"] ],
+	[ list.new(
+		word.new("foo"),
+		word.new("bar"),
 		word.new("baz")).get( number.new("1") ).bare(),
 	  "bar" ],
 	[ list.new(
@@ -33,8 +38,6 @@ var tests = [
 	  "foo" ],
 	[ list.new().bool().bare(),
 	  false ],
-	[ number.new("1")*2,
-	  2 ],
 	[ list.new(
 		number.new("1"),
 		number.new("2"),

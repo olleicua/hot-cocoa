@@ -12,6 +12,10 @@ var tests = [
 	  "{foo 1 bar 2}" ],
 	[ object.new(
 		word.new("foo"), number.new("1"),
+		word.new("bar"), number.new("2")).bare(),
+	  {"foo":1, "bar":2} ],
+	[ object.new(
+		word.new("foo"), number.new("1"),
 		word.new("bar"), number.new("2")).get( word.new("foo") ).bare(),
 	  1 ],
 	[ object.new(

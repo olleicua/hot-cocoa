@@ -12,10 +12,9 @@ var tests = [
 				["a", "b"]
 			]
 		};
-		var tree = parser.parse(tokens, grammar, "_ab");
-		return JSON.stringify(tree);
+		return parser.parse(tokens, grammar, "_ab");
 	},
-	 '[{"type":"_ab","tree":[{"type":"a"},{"type":"b"}]}]'],
+	 [{type:"_ab", tree:[{type:"a"}, {type:"b"}]}]],
 
 
        // This one fails when the parser goes down the "x is [1 2 3]"
@@ -35,9 +34,8 @@ var tests = [
 				['3']
 			]
 		};
-		var tree = parser.parse(tokens, grammar, "_ab");
-		return JSON.stringify(tree);
+		return parser.parse(tokens, grammar, "_ab");
 	},
-	 '[{"type":"_a","tree":[{"type":"_x","tree":[{"type":"1"},{"type":"2"}]},{"type":"_y","tree":[{"type":"3"}]}]}]']];
+	 [{type:"_a", tree:[{type:"_x", tree:[{type:"1"}, {type:"2"}]}, {type:"_y", tree:[{type:"3"}]}]}]]];
 
 require('./test.js').test(tests);
