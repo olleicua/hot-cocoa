@@ -5,4 +5,4 @@ var macro = require('../macro.js');
 
 var tests = [];
 
-require('../../../../test.js').test(tests);
+require('../../../../tools/test.js').test(tests);

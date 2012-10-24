@@ -6,12 +6,12 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var hcl = require('./hclParser.js');
+var hcl = require('./hcltools/parser.js');
 var eval = require('./lib/eval.js');
 
 var hello = '(console.log "Hello Wordl!") \
              (console.log 17 (parseFloat "1.0"))';
 var lists = hcl.analyze(hcl.parse(hcl.scan(hello)));
 for (var i = 0; i < lists.length; i++) {
-	eval.eval(lists[i]);
+    eval.eval(lists[i]);
 }

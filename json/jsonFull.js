@@ -6,9 +6,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var scanner = require('../scanner.js');
-var parser = require('../parser.js');
-var analyzer = require('../analyzer.js');
+var scanner = require('../tools/scanner.js');
+var parser = require('../tools/parser.js');
+var analyzer = require('../tools/analyzer.js');
 
 var tokenTypes = [
     { t:'atom', re:/^(true|false|null)/ },
@@ -89,26 +89,26 @@ var attributeGrammar = analyzer.analyzer({
 
 exports.scan = function(text) { return scanner.scan(tokenTypes, text); };
 exports.parse = function(tokens) {
-	return parser.parse(tokens, parseGrammar, "_value"); };
+    return parser.parse(tokens, parseGrammar, "_value"); };
 exports.analyze = function(tree) { return attributeGrammar.apply(tree); };
 
 if (! module.parent) {
-	var tests = [
-		'true',
-		'"crazystring"',
-		'"this string has escapes in it \\" \\\\ \\\/"',
-		'10.34',
-		'982e-10',
-		'1.2e3',
-		'[1,2,3]',
-		'{"x":1, "y":[true, false, null]}',
-		'[{"a":1, "b":2}, {"a":[null, null, null], "b":4.5}]'
-	];
+    var tests = [
+        'true',
+        '"crazystring"',
+        '"this string has escapes in it \\" \\\\ \\\/"',
+        '10.34',
+        '982e-10',
+        '1.2e3',
+        '[1,2,3]',
+        '{"x":1, "y":[true, false, null]}',
+        '[{"a":1, "b":2}, {"a":[null, null, null], "b":4.5}]'
+    ];
 
-	for (var i = 0; i < tests.length; i++) {
-		var tokens = scanner.scan(tokenTypes, tests[i]);
-		var tree = parser.parse(tokens, parseGrammar, "_value");
-		var results = attributeGrammar.apply(tree);
-		console.log(JSON.stringify(results[0]));
-	}
+    for (var i = 0; i < tests.length; i++) {
+        var tokens = scanner.scan(tokenTypes, tests[i]);
+        var tree = parser.parse(tokens, parseGrammar, "_value");
+        var results = attributeGrammar.apply(tree);
+        console.log(JSON.stringify(results[0]));
+    }
 }

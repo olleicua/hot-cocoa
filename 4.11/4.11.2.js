@@ -6,9 +6,9 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var scanner = require('../scanner.js');
-var parser = require('../parser.js');
-var analyzer = require('../analyzer.js');
+var scanner = require('../tools/scanner.js');
+var parser = require('../tools/parser.js');
+var analyzer = require('../tools/analyzer.js');
 
 var tokenTypes = [
     { t:'digit', re:/^\d/ },
@@ -52,22 +52,22 @@ var attributeGrammar = analyzer.analyzer({
 
 exports.scan = function(text) { return scanner.scan(tokenTypes, text); };
 exports.parse = function(tokens) {
-	return parser.parse(tokens, parseGrammar, "_float"); };
+    return parser.parse(tokens, parseGrammar, "_float"); };
 exports.analyze = function(tree) { return attributeGrammar.apply(tree); };
 
 if (! module.parent) {
-	var tests = [
-		'1.0',
-		'2.1234',
-		'6345.904'
-	];
+    var tests = [
+        '1.0',
+        '2.1234',
+        '6345.904'
+    ];
 
-	for (var i = 0; i < tests.length; i++) {
-		var tokens = scanner.scan(tokenTypes, tests[i]);
-		console.log(JSON.stringify(tokens));
-		var tree = parser.parse(tokens, parseGrammar, "_float");
-		console.log(JSON.stringify(tree));
-		var results = attributeGrammar.apply(tree);
-		console.log(JSON.stringify(results[0]));
-	}
+    for (var i = 0; i < tests.length; i++) {
+        var tokens = scanner.scan(tokenTypes, tests[i]);
+        console.log(JSON.stringify(tokens));
+        var tree = parser.parse(tokens, parseGrammar, "_float");
+        console.log(JSON.stringify(tree));
+        var results = attributeGrammar.apply(tree);
+        console.log(JSON.stringify(results[0]));
+    }
 }

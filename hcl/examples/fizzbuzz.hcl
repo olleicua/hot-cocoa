@@ -1,10 +1,10 @@
 (each (map (# (x)
-	      (let (three (= 0 (mod x 3))
-		    five (= 0 (mod x 5)))
-		(cond
-		 ((and three five) "FizzBuzz\n")
-		 (three "Fizz\n")
-		 (five "Buzz\n")
-		 (t (cat x "\n")))))
-	   (range 100))
+          (let (three (= 0 (mod x 3))
+            five (= 0 (mod x 5)))
+        (cond
+         ((and three five) "FizzBuzz\n")
+         (three "Fizz\n")
+         (five "Buzz\n")
+         (t (cat x "\n")))))
+       (range 100))
       (# (line) ((. process stdout write) line)))

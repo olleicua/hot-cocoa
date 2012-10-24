@@ -20,9 +20,9 @@ _Word.eval = function() {
 };
 
 var new_word = function(word) {
-	var result = Object.create(_Word);
-	result.name = word;
-	return result;
+    var result = Object.create(_Word);
+    result.name = word;
+    return result;
 }
 
 exports.new = new_word;

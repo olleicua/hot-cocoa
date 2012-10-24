@@ -15,7 +15,7 @@ for (var i = 0; i < test_inputs.length; i++) {
     var tokens = number_parser.scan(test_inputs[i]);
     var tree = number_parser.parse(tokens);
     var results = number_parser.analyze(tree);
-	tests.push([results[0], parseFloat(test_inputs[i])]);
+    tests.push([results[0], parseFloat(test_inputs[i])]);
 }
 
-require('../test.js').test(tests);
+require('../tools/test.js').test(tests);

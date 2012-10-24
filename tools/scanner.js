@@ -18,7 +18,7 @@
  * be removed from the final result.
  *
  * Example Usage:
- *   var scanner = require('./scanner.js');
+ *   var scanner = require('./tools/scanner.js');
  *   var tokenTypes = [
  *       { t:'variable', re:/[a-zA-Z_][a-zA-Z0-9_]*-/ }, // the last hyphen here
  *       { t:',', re:/^,/ },                        // is to stop the multi-line

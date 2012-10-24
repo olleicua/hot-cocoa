@@ -37,45 +37,45 @@
  */
 
 var guess = function(guess_node, tokens, grammar, position) {
-	var expansions = grammar[guess_node];
-	var current_token = tokens[position];
-	if (current_token && current_token.type === guess_node) {
-		return [current_token, 1];
-	}
-	if (expansions === undefined) {
-		return false;
-	}
-	var result_node = {type:guess_node};
-	for (var i = 0; i < expansions.length; i++) {
-		var possibility = expansions[i];
-		var offset = 0;
-		result_node.tree = [];
-		for (var j = 0; j < possibility.length; j++) {
-			var node = possibility[j];
-			var parse_result = guess(node, tokens, grammar, position + offset);
-			if (! parse_result) {
-				break;
-			}
-			result_node.tree.push(parse_result[0]);
-			offset += parse_result[1];
-		}
-		if (result_node.tree.length === possibility.length) {
-			return [result_node, offset];
-		}
-	}
-	return false;
+    var expansions = grammar[guess_node];
+    var current_token = tokens[position];
+    if (current_token && current_token.type === guess_node) {
+        return [current_token, 1];
+    }
+    if (expansions === undefined) {
+        return false;
+    }
+    var result_node = {type:guess_node};
+    for (var i = 0; i < expansions.length; i++) {
+        var possibility = expansions[i];
+        var offset = 0;
+        result_node.tree = [];
+        for (var j = 0; j < possibility.length; j++) {
+            var node = possibility[j];
+            var parse_result = guess(node, tokens, grammar, position + offset);
+            if (! parse_result) {
+                break;
+            }
+            result_node.tree.push(parse_result[0]);
+            offset += parse_result[1];
+        }
+        if (result_node.tree.length === possibility.length) {
+            return [result_node, offset];
+        }
+    }
+    return false;
 }
 
 exports.parse = function(tokens, grammar, start_node) {
-	var result = guess(start_node, tokens, grammar, 0);
+    var result = guess(start_node, tokens, grammar, 0);
     if (result) {
-		if (result[1] === tokens.length) {
-			return [result[0]];
-		} else {
-			throw 'unexpected token of type ' + tokens[result[1]].type +
-				': ' + tokens[result[1]].text + ' at position ' +
-				tokens[result[1]].position ;
-		}
+        if (result[1] === tokens.length) {
+            return [result[0]];
+        } else {
+            throw 'unexpected token of type ' + tokens[result[1]].type +
+                ': ' + tokens[result[1]].text + ' at position ' +
+                tokens[result[1]].position ;
+        }
     } else {
         throw 'parse error';
     }

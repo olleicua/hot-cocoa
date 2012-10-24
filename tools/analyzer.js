@@ -6,7 +6,7 @@
  * TODO: document this better
  * 
  * Example Usage:
- *   var analyzer = require('./analyzer.js');
+ *   var analyzer = require('./tools/analyzer.js');
  *   var tree =  [{type:"_sum-pair", tree:[
  *       {type:"_sum", tree:[
  *           {type:"number", text:"1"},
