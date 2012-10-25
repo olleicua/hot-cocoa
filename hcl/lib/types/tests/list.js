@@ -6,15 +6,17 @@ var word = require('../word.js');
 var number = require('../number.js');
 
 var tests = [
+    [ list.new().string(),
+      "()" ],
     [ list.new(
         word.new("foo"),
         word.new("bar"),
-        word.new("baz")).toString(),
+        word.new("baz")).string(),
       "(foo bar baz)" ],
     [ list.new(
         word.new("foo"),
         word.new("bar"),
-        word.new("baz")).rest().toString(),
+        word.new("baz")).rest().string(),
       "(bar baz)" ],
     [ list.new(
         word.new("foo"),
@@ -42,13 +44,13 @@ var tests = [
         number.new("1"),
         number.new("2"),
         number.new("3")).map(function(x) {
-            return number.new(x.value * 2) }).toString(),
+            return number.new(x.value * 2) }).string(),
       "(2 4 6)" ],
     [ list.new(
         number.new("1"),
         number.new("2"),
         number.new("3")).filter(function(x) {
-            return x.value % 2; }).toString(),
+            return x.value % 2; }).string(),
       "(1 3)" ]
 ];
 

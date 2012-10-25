@@ -17,11 +17,12 @@ _Object.bare = function() {
     }
     return result;
 };
-_Object.toString = function() {
-    var that = this;
-    return "{" + this.keys.map(function(key) {
-        return key.toString() + " " + that.get(key).toString();
-    }).join(" ") + "}";
+_Object.string = function() {
+    var pairs = [];
+	for (var i = 0; i < this.keys.length; i++) {
+		pairs.push(this.keys[i] + " " + this.get(this.keys[i]).string());
+	}
+    return "{" + pairs.join(" ") + "}";
 };
 _Object.equivalent = function(other) {
     if (this.keys.length !== other.keys.length) {
@@ -40,15 +41,12 @@ _Object.equivalent = function(other) {
 _Object.bool = function() { return boolean.new(this.keys.length !== 0); };
 _Object.eval = function() { return this; };
 _Object.get = function(key) {
-    // currently the keys are simply the toString of the specified object here
-    // but parsing is forcing it to be a string.  Should it be limitted to
-    // strings..
-    return this.object[key.toString()];
+    return this.object[key.string ? key.string() : key];
 };
 _Object.set = function(key, value) {
-    this.object[key.toString()] = value;
-    if (this.keys.indexOf(key.toString()) === -1) {
-        this.keys.push(key.toString());
+    this.object[key.string()] = value;
+    if (this.keys.indexOf(key.string()) === -1) {
+        this.keys.push(key.string());
     }
     return value;
 };
@@ -66,8 +64,8 @@ var new_object = function() {
     result.object = {};
     result.keys = [];
     for (var i = 1; i < arguments.length; i += 2) {
-        result.keys.push(arguments[i - 1].toString());
-        result.object[arguments[i - 1].toString()] = arguments[i];
+        result.keys.push(arguments[i - 1].string());
+        result.object[arguments[i - 1].string()] = arguments[i];
     }
     return result;
 };

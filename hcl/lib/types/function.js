@@ -18,10 +18,10 @@ _Function.bare = function() {
         // TODO: handle arguments properly (they may need to be wrapped..)
     }
 }
-_Function.toString = function() {
-    return "(# " + this.args.toString() +
+_Function.string = function() {
+    return "(# " + this.args.string() +
     this.body.map(function(values) {
-        return values.toString();
+        return values.string();
     }).join(" ") + ")";
 };
 _Function.equivalent = function(other) { return this === other; };

@@ -8,7 +8,7 @@ var number = require('../number.js');
 var tests = [
     [ object.new(
         word.new("foo"), number.new("1"),
-        word.new("bar"), number.new("2")).toString(),
+        word.new("bar"), number.new("2")).string(),
       "{foo 1 bar 2}" ],
     [ object.new(
         word.new("foo"), number.new("1"),

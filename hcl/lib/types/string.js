@@ -11,7 +11,7 @@ var boolean = require('./boolean.js');
 var _String = {};
 _String.type = "string";
 _String.bare = function() { return this.value; };
-_String.toString = function() { return this.value; };
+_String.string = function() { return this.value; };
 _String.equivalent = function(other) { return other.value === this.value; };
 _String.bool = function() { return boolean.new(this.value !== ""); };
 _String.copy = function() { return new_string(this.value); }

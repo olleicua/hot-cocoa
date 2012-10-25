@@ -18,10 +18,12 @@ _List.bare = function() {
     return result;
 }
 _List.zero_index = 0;
-_List.toString = function() { // should this be printed with '['s?
-    return "(" + this.reduce(function(value1, value2) {
-        return value1.toString() + " " + value2.toString();
-    }) + ")";
+_List.string = function() { // should this be printed with '['s?
+	var sp_separated = this.reduce(function(value1, value2) {
+        return (value1.string ? value1.string() : value1) + " " +
+			(value2.string ? value2.string() : value2);
+    }) || "";
+    return "(" + sp_separated + ")";
 };
 _List.equivalent = function(other) {
     if (this.size() !== other.size()) {

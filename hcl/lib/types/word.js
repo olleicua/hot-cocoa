@@ -11,7 +11,7 @@ var boolean = require('./boolean.js');
 var _Word = {};
 _Word.type = "word";
 _Word.bare = function() { return this.name; };
-_Word.toString = function() { return this.name; };
+_Word.string = function() { return this.name; };
 _Word.equivalent = function(other) { return other.name === this.name; };
 _Word.bool = function() { return boolean.new(true); };
 _Word.copy = function() { return new_word(this.name); };

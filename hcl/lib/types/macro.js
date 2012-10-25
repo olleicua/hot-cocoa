@@ -13,10 +13,10 @@ _Macro.type = "macro";
 _Macro.bare = function() {
     throw new Error("Macro cannot be represented as javascript");
 }
-_Macro.toString = function() {
-    return "(# " + this.args.toString() +
+_Macro.string = function() {
+    return "(# " + this.args.string() +
     this.body.map(function(values) {
-        return values.toString();
+        return values.string();
     }).join(" ") + ")";
 };
 _Macro.equivalent = function(other) { return this === other; };

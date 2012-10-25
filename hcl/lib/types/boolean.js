@@ -12,7 +12,7 @@ _Boolean.type = "boolean";
 _Boolean.bare = function() {
     return { "true": true, "false": false, "null": null    }[this.value];
 };
-_Boolean.toString = function() { return this.value; };
+_Boolean.string = function() { return this.value; };
 _Boolean.equivalent = function(other) { return this.value === other.value; };
 _Boolean.bool = function() { return new_boolean(this.value === "true"); };
 _Boolean.copy = function() { return new_boolean(this.value); };
