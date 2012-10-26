@@ -201,7 +201,7 @@
    (filter (# (x) (= 0 (mod x 2))) (range 4)) ; [0, 2]
 
 ** reduce
-   Arguments: function, list
+   Arguments: function, list [, initial]
    
    Does reduce on the list.
    

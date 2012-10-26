@@ -14,11 +14,11 @@ def getChildren dir, file_pattern=/./, dir_pattern=nil
       
       # dir matches
       (dir_pattern and dir_pattern.match dir) ?
-    "#{dir}/#{file}" :
+    "#{dir}/#{file}".gsub(/ /, "\\ ") :
       
       # file matches
       (file_pattern.match file) ?
-    "#{dir}/#{file}" :
+    "#{dir}/#{file}".gsub(/ /, "\\ ") :
       
       # file doesn't match
       nil

@@ -8,6 +8,8 @@ var number = require('../number.js');
 var tests = [
     [ list.new().string(),
       "()" ],
+    [ list.new( word.new("foo") ).string(),
+      "(foo)" ],
     [ list.new(
         word.new("foo"),
         word.new("bar"),
@@ -51,7 +53,23 @@ var tests = [
         number.new("2"),
         number.new("3")).filter(function(x) {
             return x.value % 2; }).string(),
-      "(1 3)" ]
+      "(1 3)" ],
+    [ list.new(
+        number.new("1"),
+        number.new("2"),
+        number.new("3"),
+        number.new("4")).reduce(function(a, b) {
+            return (a.value !== undefined ? a.value : a) *
+				(b.value !== undefined ? b.value : b); }),
+      24 ],
+    [ list.new(
+        number.new("1"),
+        number.new("2"),
+        number.new("3")).reduce(function(a, b) {
+            return (a.value !== undefined ? a.value : a) +
+				(b.value !== undefined ? b.value : b); },
+								7),
+      13 ]
 ];
 
 require('../../../../tools/test.js').test(tests);

@@ -19,10 +19,11 @@ _List.bare = function() {
 }
 _List.zero_index = 0;
 _List.string = function() { // should this be printed with '['s?
-	var sp_separated = this.reduce(function(value1, value2) {
-        return (value1.string ? value1.string() : value1) + " " +
-			(value2.string ? value2.string() : value2);
-    }) || "";
+	var sp_separated = (this.size() > 1) ?
+		this.reduce(function(value1, value2) {
+			return (value1.string ? value1.string() : value1) + " " +
+				(value2.string ? value2.string() : value2);
+		}) : (this.size() === 1) ? this.first().string() : "";
     return "(" + sp_separated + ")";
 };
 _List.equivalent = function(other) {
@@ -87,9 +88,17 @@ _List.filter = function(func) {
     }
     return result;
 }
-_List.reduce = function(func) {
-    var result = this.first();
-    for (var i = this.zero_index + 1; i < this.values.length; i++) {
+_List.reduce = function(func, initial) {
+	var result = initial;
+	var offset = 0;
+	if (initial === undefined) {
+		if (this.size() === 0) {
+			throw new Error("Cannot reduce list of zero length");
+		}
+		var result = this.first();
+		var offset = 1;
+	}
+    for (var i = this.zero_index + offset; i < this.values.length; i++) {
         result = func(result, this.values[i]);
     }
     return result;
