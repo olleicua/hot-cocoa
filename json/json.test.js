@@ -25,9 +25,18 @@ var anagrams = function(a, b) {
     return _a.join('') === _b.join('');
 }
 
+// recursive descent parser
 for (var i = 0; i < test_inputs.length; i++) {
     var tokens = json.scan(test_inputs[i]);
     var tree = json.parse(tokens);
+    var results = json.analyze(tree);
+    tests.push([results[0], (new Function('return ' + test_inputs[i] + ';'))()]);
+}
+
+// CYK parser
+for (var i = 0; i < test_inputs.length; i++) {
+    var tokens = json.scan(test_inputs[i]);
+    var tree = json.parse(tokens, require('../tools/CYKparser.js'));
     var results = json.analyze(tree);
     tests.push([results[0], (new Function('return ' + test_inputs[i] + ';'))()]);
 }

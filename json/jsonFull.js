@@ -88,8 +88,9 @@ var attributeGrammar = analyzer.analyzer({
 });
 
 exports.scan = function(text) { return scanner.scan(tokenTypes, text); };
-exports.parse = function(tokens) {
-    return parser.parse(tokens, parseGrammar, "_value"); };
+exports.parse = function(tokens, different_parser) {
+    var _parser = different_parser || parser;
+	return _parser.parse(tokens, parseGrammar, "_value"); };
 exports.analyze = function(tree) { return attributeGrammar.apply(tree); };
 
 if (! module.parent) {

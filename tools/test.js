@@ -28,7 +28,7 @@ exports.test = function(tests) {
             try {
                 var value1 = tests[i][0]();
             } catch (error) {
-                var value1 = error;
+				var value1 = error.toString();
             }
         } else {
             var value1 = tests[i][0];
@@ -36,7 +36,7 @@ exports.test = function(tests) {
         if (equivalent(value1, tests[i][1])) {
             passed++;
         } else {
-            console.log("Failed test " + i +
+            console.log("Failed test " + (i + 1) +
                         " expecting " + JSON.stringify(tests[i][1]) +
                         " got " + JSON.stringify(value1) + ".");
         }

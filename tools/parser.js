@@ -1,6 +1,6 @@
 /* Parser in Javascript
  * 
- * This is a simple recursive decent parser using an abstract JSON grammar
+ * This is a simple recursive descent parser using an abstract JSON grammar
  * notation of my own design.  The grammar consists of an object relating a
  * non-terminal to an array of arrays of strings.  Each of the inner arrays
  * represents one of the possible expansions of the non-terminal and consists of
@@ -36,38 +36,39 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var guess = function(guess_node, tokens, grammar, position) {
-    var expansions = grammar[guess_node];
-    var current_token = tokens[position];
-    if (current_token && current_token.type === guess_node) {
-        return [current_token, 1];
-    }
-    if (expansions === undefined) {
-        return false;
-    }
-    var result_node = {type:guess_node};
-    for (var i = 0; i < expansions.length; i++) {
-        var possibility = expansions[i];
-        var offset = 0;
-        result_node.tree = [];
-        for (var j = 0; j < possibility.length; j++) {
-            var node = possibility[j];
-            var parse_result = guess(node, tokens, grammar, position + offset);
-            if (! parse_result) {
-                break;
-            }
-            result_node.tree.push(parse_result[0]);
-            offset += parse_result[1];
-        }
-        if (result_node.tree.length === possibility.length) {
-            return [result_node, offset];
-        }
-    }
-    return false;
-}
-
 exports.parse = function(tokens, grammar, start_node) {
-    var result = guess(start_node, tokens, grammar, 0);
+	
+	var guess = function(guess_node, position) {
+		var expansions = grammar[guess_node];
+		var current_token = tokens[position];
+		if (current_token && current_token.type === guess_node) {
+			return [current_token, 1];
+		}
+		if (expansions === undefined) {
+			return false;
+		}
+		var result_node = {type:guess_node};
+		for (var i = 0; i < expansions.length; i++) {
+			var possibility = expansions[i];
+			var offset = 0;
+			result_node.tree = [];
+			for (var j = 0; j < possibility.length; j++) {
+				var node = possibility[j];
+				var parse_result = guess(node, position + offset);
+				if (! parse_result) {
+					break;
+				}
+				result_node.tree.push(parse_result[0]);
+				offset += parse_result[1];
+			}
+			if (result_node.tree.length === possibility.length) {
+				return [result_node, offset];
+			}
+		}
+		return false;
+	}
+
+    var result = guess(start_node, 0);
     if (result) {
         if (result[1] === tokens.length) {
             return [result[0]];
