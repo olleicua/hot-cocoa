@@ -33,6 +33,13 @@
  *       {type:"b"}
  *   ]}]
  * 
+ * I recived significant help understanding this algorithm from
+ * Peter Schmidt-Nielsen.  Specifically it was his idea to repeat the
+ * calculation of the possible expansions of a given interval until no new ones
+ * are added so as to allow for expansions of size 0 and 1.  The original
+ * formulation of the algorithm requires CNF.  My CNF converter simply ensures
+ * that each production has no more than two symbols in it.
+ * 
  * Sam Auciello | September 2012 
  * http://opensource.org/licenses/mit-license.php
  */
@@ -109,9 +116,12 @@ var collapse_cnf_artifacts = function(parse_tree) {
 	//     {type:"b"},
 	//     {type:"c"},
 	//     {type:"d"}]}
-	var result = {type:parse_tree.type};
-	if (parse_tree.text) {
-		result.text = parse_tree.text;
+	var result = {};
+	var keys = Object.keys(parse_tree);
+	for (var i = 0; i < keys.length; i++) {
+		if (parse_tree[keys[i]] !== undefined) {
+			result[keys[i]] = parse_tree[keys[i]];
+		}
 	}
 	if (parse_tree.tree) {
 		result.tree = [];
@@ -135,8 +145,8 @@ exports.parse = function(tokens, grammar, start_node) {
 	
 	var cnf_grammar = to_cnf(grammar);
 	
-	// a map from (non-terminal, interval) to a pair of pointers either to
-	// terminals or to other pairs in the map
+	// a map from (non-terminal, interval) to a valid parsing of that interval
+	// as that non-terminal if one exists.
 	var parse_table = {};
 	
 	var try_parse = function(node, position, size) {
@@ -170,9 +180,7 @@ exports.parse = function(tokens, grammar, start_node) {
 							// add epsilon expansions if size is 0
 							if (size === 0) {
 								if (parse_table[[key, position, size]] ===
-									undefined) {
-									changed = true;
-								}
+									undefined) { changed = true; }
 								parse_table[[key, position, size]] =
 									{type:key, tree:[]};
 							}
@@ -184,9 +192,7 @@ exports.parse = function(tokens, grammar, start_node) {
 							var p;
 							if (p = try_parse(expansion[0], position, size)) {
 								if (parse_table[[key, position, size]] ===
-									undefined) {
-									changed = true;
-								}
+									undefined) { changed = true; }
 								parse_table[[key, position, size]] =
 									{type:key, tree:[p]};
 							}
@@ -203,9 +209,7 @@ exports.parse = function(tokens, grammar, start_node) {
 												   size - divide);
 								if (p1 && p2) {
 									if (parse_table[[key, position, size]] ===
-										undefined) {
-										changed = true;
-									}
+										undefined) { changed = true; }
 									parse_table[[key, position, size]] =
 										{type:key, tree:[p1, p2]};
 									break divisions;
