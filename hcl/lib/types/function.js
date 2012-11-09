@@ -33,16 +33,24 @@ _Function.copy = function() {
 _Function.call = function(args) {
     // TODO: think about what is evaled when.  Should a wrapper object eval to a
     // javascript literal..?
-    return this.func.apply(undefined, args.values);
+    return this.func(args);
 }
 
 var new_function = function(args, body) {
     var result = Object.create(_Function);
-    if (typeof(args) === 'function') {
-        // TODO
-    }
     // TODO: fill this in
     return result;
 }
 
+var new_function_from_js = function(context, func) {
+    var result = Object.create(_Function);
+	result.context = context; // preserve this
+    result.func = function(args) {
+		return func.apply(context, args.bare());
+	}
+    return result;
+}
+
 exports.new = new_function;
+exports.new_from_js = new_function_from_js;
+exports._Function = _Function;

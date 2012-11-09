@@ -30,7 +30,7 @@ total = 0
 passed = 0
 (getChildren ".", /\.test\./, /\/tests\b/).each do |file|
   puts "\n#{file}"
-  test = `node #{file}`
+  test = `nodejs #{file}`
   puts test
   _,t,p = (/Passed (\d+) of (\d+) tests\./.match test).to_a
   total += t.to_i

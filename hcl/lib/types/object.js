@@ -44,9 +44,14 @@ _Object.get = function(key) {
     return this.object[key.string ? key.string() : key];
 };
 _Object.set = function(key, value) {
-    this.object[key.string()] = value;
-    if (this.keys.indexOf(key.string()) === -1) {
-        this.keys.push(key.string());
+    if (typeof(key) === 'string') {
+	var _key = key;
+    } else {
+	var _key = key.string();
+    }
+    this.object[_key] = value;
+    if (this.keys.indexOf(_key) === -1) {
+        this.keys.push(_key);
     }
     return value;
 };
