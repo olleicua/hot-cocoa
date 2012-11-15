@@ -1,2 +1,6 @@
+hcl/built-ins
 hcl/notes
 todo.org
+hcl/examples/io/fizzbuzz.rb
+tools/parser2.js
+tools/parser2.test.js
