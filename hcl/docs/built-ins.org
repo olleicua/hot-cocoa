@@ -249,4 +249,15 @@
    Examples:
    (each ["foo" "bar" "baz"]
          (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n"
+** while
+   Arguments: condition, expressions*
+   
+   checks the condition the evaluates each of the expressions if true
+   then repeats until the condition is false.
+   
+   Examples:
+   (def x 4)
+   (while (< 0 x)
+     (console.log word)
+	 (def x (1- x))) ; outputs "4\n3\n2\n1\n"
 
