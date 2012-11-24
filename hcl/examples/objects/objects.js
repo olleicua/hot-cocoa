@@ -1,8 +1,8 @@
 // basic object
 
 var my_object = {
-	number: 10,
-	add: function(x) { this.number += x; }
+    number: 10,
+    add: function(x) { this.number += x; }
 };
 
 console.log(my_object.number) // 10
@@ -12,14 +12,14 @@ console.log(my_object.number) // 15
 // inheritance
 
 var _Person = {
-	first_name: 'N/A',
-	last_name: 'N/A',
-	full_name: function() {
-		return this.first_name + ' ' + this.last_name;
-	},
-	shake_hands: function(other) {
-		console.log(this.full_name() + ' shakes hands with ' + other.full_name());
-	}
+    first_name: 'N/A',
+    last_name: 'N/A',
+    full_name: function() {
+        return this.first_name + ' ' + this.last_name;
+    },
+    shake_hands: function(other) {
+        console.log(this.full_name() + ' shakes hands with ' + other.full_name());
+    }
 }
 
 var sam = Object.create(_Person);

@@ -60,15 +60,15 @@ var tests = [
         number.new("3"),
         number.new("4")).reduce(function(a, b) {
             return (a.value !== undefined ? a.value : a) *
-				(b.value !== undefined ? b.value : b); }),
+                (b.value !== undefined ? b.value : b); }),
       24 ],
     [ list.new(
         number.new("1"),
         number.new("2"),
         number.new("3")).reduce(function(a, b) {
             return (a.value !== undefined ? a.value : a) +
-				(b.value !== undefined ? b.value : b); },
-								7),
+                (b.value !== undefined ? b.value : b); },
+                                7),
       13 ]
 ];
 

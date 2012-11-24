@@ -1,9 +1,9 @@
 ;; basic object
 
 (def my_object
-	 { number 10
-	   add (# (x) (set this number
-					   (1+ this.number))) } )
+     { number 10
+       add (# (x) (set this number
+                       (1+ this.number))) } )
 
 (console.log my_object.number) ; 10
 (my_object.add 5)
@@ -14,12 +14,12 @@
 ;; inheritance
 
 (def _Person
-	 { first_name "N/A"
-	   last_name "N/A"
-	   full_name (# () (format "? ?" this.first_name this.last_name))
-	   shake_hands (# (other) (console.log (format "? shakes hands with ?"
-												   (this.full_name)
-												   (other.full_name)))) } )
+     { first_name "N/A"
+       last_name "N/A"
+       full_name (# () (format "? ?" this.first_name this.last_name))
+       shake_hands (# (other) (console.log (format "? shakes hands with ?"
+                                                   (this.full_name)
+                                                   (other.full_name)))) } )
 
 (def sam (inherit _Person))
 (set sam first_name "Sam")

@@ -19,9 +19,9 @@ _Object.bare = function() {
 };
 _Object.string = function() {
     var pairs = [];
-	for (var i = 0; i < this.keys.length; i++) {
-		pairs.push(this.keys[i] + " " + this.get(this.keys[i]).string());
-	}
+    for (var i = 0; i < this.keys.length; i++) {
+        pairs.push(this.keys[i] + " " + this.get(this.keys[i]).string());
+    }
     return "{" + pairs.join(" ") + "}";
 };
 _Object.equivalent = function(other) {
@@ -45,9 +45,9 @@ _Object.get = function(key) {
 };
 _Object.set = function(key, value) {
     if (typeof(key) === 'string') {
-	var _key = key;
+    var _key = key;
     } else {
-	var _key = key.string();
+    var _key = key.string();
     }
     this.object[_key] = value;
     if (this.keys.indexOf(_key) === -1) {

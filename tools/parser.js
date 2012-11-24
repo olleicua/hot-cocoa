@@ -37,36 +37,36 @@
  */
 
 exports.parse = function(tokens, grammar, start_node) {
-	
-	var guess = function(guess_node, position) {
-		var expansions = grammar[guess_node];
-		var current_token = tokens[position];
-		if (current_token && current_token.type === guess_node) {
-			return [current_token, 1];
-		}
-		if (expansions === undefined) {
-			return false;
-		}
-		var result_node = {type:guess_node};
-		for (var i = 0; i < expansions.length; i++) {
-			var possibility = expansions[i];
-			var offset = 0;
-			result_node.tree = [];
-			for (var j = 0; j < possibility.length; j++) {
-				var node = possibility[j];
-				var parse_result = guess(node, position + offset);
-				if (! parse_result) {
-					break;
-				}
-				result_node.tree.push(parse_result[0]);
-				offset += parse_result[1];
-			}
-			if (result_node.tree.length === possibility.length) {
-				return [result_node, offset];
-			}
-		}
-		return false;
-	}
+    
+    var guess = function(guess_node, position) {
+        var expansions = grammar[guess_node];
+        var current_token = tokens[position];
+        if (current_token && current_token.type === guess_node) {
+            return [current_token, 1];
+        }
+        if (expansions === undefined) {
+            return false;
+        }
+        var result_node = {type:guess_node};
+        for (var i = 0; i < expansions.length; i++) {
+            var possibility = expansions[i];
+            var offset = 0;
+            result_node.tree = [];
+            for (var j = 0; j < possibility.length; j++) {
+                var node = possibility[j];
+                var parse_result = guess(node, position + offset);
+                if (! parse_result) {
+                    break;
+                }
+                result_node.tree.push(parse_result[0]);
+                offset += parse_result[1];
+            }
+            if (result_node.tree.length === possibility.length) {
+                return [result_node, offset];
+            }
+        }
+        return false;
+    }
 
     var result = guess(start_node, 0);
     if (result) {

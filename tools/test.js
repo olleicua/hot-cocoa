@@ -6,7 +6,7 @@ var equivalent  = function(value1, value2) {
         return false;
     }
     if (value1 === value2) {
-	return true;
+    return true;
     }
     if (typeof(value1) === 'object' && value1 !== null) {
         var keys1 = Object.keys(value1);
@@ -31,7 +31,7 @@ exports.test = function(tests) {
             try {
                 var value1 = tests[i][0]();
             } catch (error) {
-				var value1 = error.toString();
+                var value1 = error.toString();
             }
         } else {
             var value1 = tests[i][0];
@@ -39,15 +39,15 @@ exports.test = function(tests) {
         if (equivalent(value1, tests[i][1])) {
             passed++;
         } else {
-	    try {
-		console.log("Failed test " + (i + 1) +
+        try {
+        console.log("Failed test " + (i + 1) +
                             " expecting " + JSON.stringify(tests[i][1]) +
                             " got " + JSON.stringify(value1) + ".");
-	    } catch(e) {
-		console.log("Failed test " + (i + 1) +
+        } catch(e) {
+        console.log("Failed test " + (i + 1) +
                             " expecting " + tests[i][1] +
                             " got " + value1 + ".");
-	    }
+        }
         }
     }
     console.log("Passed " + passed + " of " + tests.length + " tests.");

@@ -44,10 +44,10 @@ var new_function = function(args, body) {
 
 var new_function_from_js = function(context, func) {
     var result = Object.create(_Function);
-	result.context = context; // preserve this
+    result.context = context; // preserve this
     result.func = function(args) {
-		return func.apply(context, args.bare());
-	}
+        return func.apply(context, args.bare());
+    }
     return result;
 }
 
