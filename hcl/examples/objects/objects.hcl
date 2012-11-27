@@ -2,8 +2,7 @@
 
 (def my_object
      { number 10
-       add (# (x) (set this number
-                       (1+ this.number))) } )
+       add (# (x) (set 'this number (+ x this.number))) } )
 
 (console.log my_object.number) ; 10
 (my_object.add 5)
@@ -22,8 +21,8 @@
                                                    (other.full_name)))) } )
 
 (def sam (inherit _Person))
-(set sam first_name "Sam")
-(set sam last_name "Auciello")
+(set sam 'first_name "Sam")
+(set sam 'last_name "Auciello")
 
 (console.log (get sam "first_name")) ; Sam
 (console.log (get sam 'first_name)) ; Sam
@@ -31,8 +30,8 @@
 (console.log sam.first_name) ; Sam
 
 (def jim (inherit _Person))
-(set jim first_name "Jim")
-(set jim last_name "Mahoney")
+(set jim 'first_name "Jim")
+(set jim 'last_name "Mahoney")
 
 (jim.shake_hands sam) ; Jim Mahoney shakes hands with Sam Auciello
 (call shake_hands sam jim); // Sam Auciello shakes hands with Jim Mahoney

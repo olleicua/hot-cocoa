@@ -59,8 +59,8 @@
                    ;; make the clicked cell empty
                    (cell.css { background-image "none"
                                border "none" } )
-                   (set empty.x x)
-                   (set empty.y y))))))))
+                   (set empty 'x x)
+                   (set empty 'y y))))))))
 
 ;; MAIN
 

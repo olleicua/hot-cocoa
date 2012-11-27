@@ -37,14 +37,14 @@
         (let (cell (document.getElementById (cell_id x y)))
           
           ;; set the cell's initial style properties
-          (set cell.style width (cat CELL_SIZE "px"))
-          (set cell.style height (cat CELL_SIZE "px"))
+          (set cell.style 'width (cat CELL_SIZE "px"))
+          (set cell.style 'height (cat CELL_SIZE "px"))
           
           ;; non empty properties
           (when (not (and (= empty.x x) (= empty.y y)))
-            (set cell.style border "1px solid #000")
-            (set cell.style backgroundImage (cat "url(" IMG_PATH ")"))
-            (set cell.style backgroundPosition
+            (set cell.style 'border "1px solid #000")
+            (set cell.style 'backgroundImage (cat "url(" IMG_PATH ")"))
+            (set cell.style 'backgroundPosition
                  (cat "-" (* x CELL_SIZE) "px -" (* y CELL_SIZE) "px")))
           
           ;; set a click listener
@@ -54,17 +54,17 @@
                                      (cell_id empty.x empty.y)))
                                      
                      ;; make the empty cell look like the clicked cell
-                     (set empty_cell.style backgroundImage
+                     (set empty_cell.style 'backgroundImage
                           (cat "url(" IMG_PATH ")"))
-                     (set empty_cell.style backgroundPosition
+                     (set empty_cell.style 'backgroundPosition
                           cell.style.backgroundPosition) ; visible via closure
-                     (set empty_cell.style border "1px solid #000")
+                     (set empty_cell.style 'border "1px solid #000")
                      
                      ;; make the clicked cell empty
-                     (set cell.style backgroundImage "none")
-                     (set cell.style border "none")
-                     (set empty x x)
-                     (set empty y y))))))))
+                     (set cell.style 'backgroundImage "none")
+                     (set cell.style 'border "none")
+                     (set empty 'x x)
+                     (set empty 'y y))))))))
 
 ;; MAIN
     
