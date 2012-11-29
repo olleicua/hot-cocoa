@@ -4,12 +4,9 @@
                             orientation "horizontal"
                             range "min"
                             animate true } )
-;; OR ??
+;; OR
 
 (($ "#master").slider { value 60
                         orientation "horizontal"
                         range "min"
                         animate true } )
-
-(def foo.bar (lambda () (print "Hi")))
-

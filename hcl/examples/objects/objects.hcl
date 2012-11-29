@@ -2,7 +2,7 @@
 
 (def my_object
      { number 10
-       add (# (x) (set 'this number (+ x this.number))) } )
+       add (# (x) (set this 'number (+ x this.number))) } )
 
 (console.log my_object.number) ; 10
 (my_object.add 5)
