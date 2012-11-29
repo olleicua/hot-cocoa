@@ -73,12 +73,12 @@
      
      : obj.key1.key2
      : (. obj key1 key2)
-	 
-	 The first argument of /./ can be either a symbol bound to an
+     
+     The first argument of /./ can be either a symbol bound to an
      object in scope or an list expression evaluating to an object:
-	 
-	 : (. (expression-evaluating-to-object) key)
-	 : (expression-evaluating-to-object).key
+     
+     : (. (expression-evaluating-to-object) key)
+     : (expression-evaluating-to-object).key
      
      where /obj.key1/ is another object that has the key /key2/. Just
      like the dotted notation in Javascript, this notation only works
@@ -119,6 +119,6 @@
     
     : (call method context args..)
     : (apply method context arg-list)
-	
-	Wrapped functions will have their call and apply methods
+    
+    Wrapped functions will have their call and apply methods
     overridden to make them work correctly with call and apply.

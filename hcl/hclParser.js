@@ -6,20 +6,21 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var number = require('./lib/number.js');
-var string = require('./lib/string.js');
-var word = require('./lib/word.js');
-var list = require('./lib/list.js');
-var boolean = require('./lib/list.js');
+var number = require('./lib/types/number.js');
+var string = require('./lib/types/string.js');
+var word = require('./lib/types/word.js');
+var list = require('./lib/types/list.js');
+var boolean = require('./lib/types/boolean.js');
 var scanner = require('../tools/scanner.js');
 var parser = require('../tools/parser.js');
 var analyzer = require('../tools/analyzer.js');
 
 var tokenTypes = [ // TODO: add T and NIL
-    { t:'boolean', re:/^(true|false|null)/ },
+    { t:'boolean', re:/^(true|false|null|undefined)/ },
     { t:'number', re:/^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][-+]?[0-9]+)?/ },
     { t:'string', re:/^"(\\"|[^"])*"/ },
-    { t:'word', re:/^[a-zA-Z_!?$%&*+-=\/<>^~][a-zA-Z0-9_!?$%&*+-=\/<>^~]*\b/ },
+    { t:'word',
+      re:/^([a-zA-Z_!?$%&#*+\-=\/<>^~][a-zA-Z0-9_!?$%&#*+\-=\/<>^~]*)/ },
     { t:'(', re:/^\(/ },
     { t:')', re:/^\)/ },
     { t:'[', re:/^\[/ },
@@ -29,6 +30,7 @@ var tokenTypes = [ // TODO: add T and NIL
     { t:'\'', re:/^'/ },
     { t:'`', re:/^`/ },
     { t:',', re:/^,/ },
+    { t:'.', re:/^\./ },
     { t:'whitespace', re:/^\s+/ }
 ];
 
@@ -41,9 +43,10 @@ var parseGrammar = {
         []
     ],
     '_expression': [
-        ['_puncuated-list'], // should '[ or '{ be allowed..?
+        ['_puncuated-list'], // should '[ or '{ be allowed..? ..no!
+        ['_dotted-chain'],
         ['_list'],
-        ['_data-list'], // this needs a better name
+        ['_literal-list'],
         ['_object'],
         ['_atom']
     ],
@@ -52,7 +55,6 @@ var parseGrammar = {
         ['`', '_expression'],
         [',', '_expression']
     ],
-    // TODO : add lists and objects
     '_list': [
         ['(', '_list-tail']
     ],
@@ -60,11 +62,22 @@ var parseGrammar = {
         ['_expression', '_list-tail'],
         [')']
     ],
-    '_data-list': [
-        ['[', '_data-list-tail']
+    '_dotted-chain': [
+        ['_obj-reference', '.', 'word', '_dotted-chain-tail']
     ],
-    '_data-list-tail': [
-        ['_expression', '_data-list-tail'],
+    '_obj-reference': [
+        ['_list'],
+        ['word']
+    ],
+    '_dotted-chain-tail': [
+        ['.', 'word', '_dotted-chain-tail'],
+        []
+    ],
+    '_literal-list': [
+        ['[', '_literal-list-tail']
+    ],
+    '_literal-list-tail': [
+        ['_expression', '_literal-list-tail'],
         [']']
     ],
     '_object': [
@@ -75,6 +88,7 @@ var parseGrammar = {
         ['}']
     ],
     '_atom': [
+        ['.'],
         ['word'],
         ['string'],
         ['number'],
@@ -84,8 +98,6 @@ var parseGrammar = {
 
 // generate an array of HCL expressions
 var attributeGrammar = analyzer.analyzer({
-    // Do we want this here?? .. no?
-    // 'variables': {},
     '_program': function(tree) {
         return this.analyze(tree[1], this.analyze(tree[0]));
     },
@@ -103,7 +115,7 @@ var attributeGrammar = analyzer.analyzer({
     },
     '_puncuated-list': function(tree) {
         var result = list.new();
-        switch (tree[0]) {
+        switch (tree[0].type) {
         case '\'' :
             result.push(word.new('quote'));
             break;
@@ -131,19 +143,31 @@ var attributeGrammar = analyzer.analyzer({
         }
         return result;
     },
-    '_data-list': function(tree) {
+    '_literal-list': function(tree) {
         var result = list.new();
         result.push(word.new('list'));
-        result.push(this.analyze(tree[1]));
+        var body = this.analyze(tree[1]);
+        for (var i = 0; i < body.values.length; i++) {
+            result.push(body.values[i]);
+            // FIXME: the list wrappers are unneccessary and thus
+            // so are the '.values's here
+            // ???
+        }
         return result;
     },
-    '_data-list-tail': function(tree, beginning) {
+    '_literal-list-tail': function(tree, beginning) {
         return this['_list-tail'](tree, beginning);
     },
-    '_object': function(tree) { // should this just build the object??
+    '_object': function(tree) {
         var result = list.new();
         result.push(word.new('object'));
-        result.push(this.analyze(tree[1]));
+        var body = this.analyze(tree[1]);
+        for (var i = 0; i < body.values.length; i++) {
+            result.push(body.values[i]);
+            // FIXME: the list wrappers are unneccessary and thus
+            // so are the '.values's here
+            // ???
+        }
         return result;
     },
     '_object-tail': function(tree, args) {
@@ -153,7 +177,8 @@ var attributeGrammar = analyzer.analyzer({
         }
         if (tree[0].type === '_atom') {
             var x = this.analyze(tree[1]);
-            var result = this.analyze(tree[2], [this.analyze(tree[0]), this.analyze(tree[1])]);
+            var result = this.analyze(tree[2], [this.analyze(tree[0]),
+                                                this.analyze(tree[1])]);
         } else {
             var result = list.new();
         }
@@ -161,6 +186,25 @@ var attributeGrammar = analyzer.analyzer({
             result.unshift(value);
             result.unshift(key);
         }
+        return result;
+    },
+    '_dotted-chain': function(tree) {
+        var result = list.new();
+        result.push(word.new('.'));
+        result.push(this.analyze(tree[0].tree[0]));
+        result.push(this.analyze(tree[2]));
+        var body = this.analyze(tree[3]);
+        for (var i = 0; i < body.length; i++) {
+            result.push(body[i]);
+        }
+        return result;
+    },
+    '_dotted-chain-tail': function(tree) {
+        if (tree.length === 0) {
+            return [];
+        }
+        var result = this.analyze(tree[2]);
+        result.unshift(this.analyze(tree[1]));
         return result;
     },
     '_atom': function(tree) {
@@ -174,12 +218,14 @@ var attributeGrammar = analyzer.analyzer({
         case 'number' :
             return number.new(tree[0].text);
             break;
-        }
         case 'boolean' :
             return boolean.new(tree[0].text);
             break;
         }
     },
+    'word': function(word) {
+        return this['_atom']([word]);
+    }
 });
 
 exports.scan = function(text) {
@@ -187,6 +233,7 @@ exports.scan = function(text) {
     return tokens;
 };
 exports.parse = function(tokens) {
+    // TODO: assert that the entire input has been parsed
     return parser.parse(tokens, parseGrammar, "_program");
 };
 exports.analyze = function(tree) {

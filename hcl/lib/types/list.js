@@ -60,6 +60,12 @@ _List.set = function(index, value) {
         return this.values[this.zero_index + index.value] = value;
     }
 }
+_List.push = function(value) {
+    this.values.push(value);
+}
+_List.unshift = function(value) {
+    this.values.unshift(value);
+}
 _List.first = function() {
     return this.values[this.zero_index];
 }
