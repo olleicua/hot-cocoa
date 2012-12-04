@@ -209,6 +209,10 @@
    (reduce (# (a b) (+ a b)) (range 4)) ; 10
 
 * Control Flow
+** begin
+   Arguments: expressions*
+   
+   evaluate each argument and return the last
 ** if
    Arguments: condition, true-expression, false-expression
 
@@ -240,15 +244,6 @@
    (cond
     (nil 1)
     (t 2)) ; 2
-
-** each
-   Arguments: list, function
-   
-   Calls the function on each element of the list
-   
-   Examples:
-   (each ["foo" "bar" "baz"]
-         (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n"
 ** while
    Arguments: condition, expressions*
    
@@ -260,3 +255,21 @@
    (while (< 0 x)
      (console.log word)
      (def x (1- x))) ; outputs "4\n3\n2\n1\n"
+
+** for
+   Arguments initial-assignment, condition, step, expressions*
+   
+   ..
+   
+   Examples:
+   (for (i 0) (< i 10) (i (1+ i))
+     (console.log (format "i: ?" i)))
+
+** each
+   Arguments: list, function
+   
+   Calls the function on each element of the list
+   
+   Examples:
+   (each ["foo" "bar" "baz"]
+         (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n"

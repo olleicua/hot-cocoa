@@ -1,13 +1,19 @@
 /* A simple Javascript testing system
  */
 
-var equivalent  = function(value1, value2) {
+var template = require('./template.js');
+
+var equivalent = function(value1, value2) {
+    
     if (typeof(value1) !== typeof(value2)) {
         return false;
     }
+    
     if (value1 === value2) {
-    return true;
+        return true;
     }
+    
+    // recursively compare objects and arrays
     if (typeof(value1) === 'object' && value1 !== null) {
         var keys1 = Object.keys(value1);
         var keys2 = Object.keys(value2);
@@ -21,34 +27,39 @@ var equivalent  = function(value1, value2) {
         }
         return true;
     }
+    
     return false;
 };
 
 exports.test = function(tests) {
+    
     var passed = 0;
+    
     for (var i = 0; i < tests.length; i++) {
-        if (typeof(tests[i][0]) === 'function') {
+
+        var test_value = tests[i][0];
+        var expected_value = tests[i][1];
+        
+        // if test_value is a function, wrap it in a try to isolate and expose
+        // any errors without interupting the rest of the tests
+        if (typeof(test_value) === 'function') {
             try {
-                var value1 = tests[i][0]();
+                test_value = test_value();
             } catch (error) {
-                var value1 = error.toString();
+                test_value = error.toString();
             }
-        } else {
-            var value1 = tests[i][0];
         }
-        if (equivalent(value1, tests[i][1])) {
+        
+        if (equivalent(test_value, expected_value)) {
             passed++;
         } else {
-        try {
-        console.log("Failed test " + (i + 1) +
-                            " expecting " + JSON.stringify(tests[i][1]) +
-                            " got " + JSON.stringify(value1) + ".");
-        } catch(e) {
-        console.log("Failed test " + (i + 1) +
-                            " expecting " + tests[i][1] +
-                            " got " + value1 + ".");
-        }
+            console.log(template.format("Failed test ~~ expecting ~~ got ~~.",
+                                        [i + 1,
+                                         JSON.stringify(expected_value),
+                                         JSON.stringify(test_value)]));
         }
     }
-    console.log("Passed " + passed + " of " + tests.length + " tests.");
+    
+    console.log(template.format("Passed ~~ of ~~ tests.",
+                                [passed, tests.length]);
 };

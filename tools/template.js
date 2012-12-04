@@ -26,6 +26,7 @@ var fs = require('fs');
 
 var format = function(format_string, values) {
     var index = 0;
+    // TODO: add escape mechanism
     return format_string.replace(/~([a-zA-Z0-9_]*)~/g, function(_, key) {
         if (key === '') {
             key = index;

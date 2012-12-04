@@ -20,7 +20,7 @@ var tokenTypes = [ // TODO: add T and NIL
     { t:'number', re:/^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][-+]?[0-9]+)?/ },
     { t:'string', re:/^"(\\"|[^"])*"/ },
     { t:'word',
-      re:/^([a-zA-Z_!?$%&@#|*+\-=\/<>^~][a-zA-Z0-9_!?$%&@#|*+\-=\/<>^~]*)/ },
+      re:/^([a-zA-Z_!?$%&@#|*+\-=\/<>^][a-zA-Z0-9_!?$%&@#|*+\-=\/<>^]*)/ },
     { t:'(', re:/^\(/ },
     { t:')', re:/^\)/ },
     { t:'[', re:/^\[/ },
@@ -29,10 +29,10 @@ var tokenTypes = [ // TODO: add T and NIL
     { t:'}', re:/^}/ },
     { t:'\'', re:/^'/ },
     { t:'`', re:/^`/ },
-    { t:',', re:/^,/ },
+    { t:'~', re:/^~/ },
     { t:'.', re:/^\./ },
     { t:'comment', re:/^;[^\n]*\n/ },
-    { t:'whitespace', re:/^\s+/ }
+    { t:'whitespace', re:/^[\s,:]+/ }
 ];
 
 var parseGrammar = {
@@ -54,7 +54,7 @@ var parseGrammar = {
     '_puncuated-list': [
         ['\'', '_expression'],
         ['`', '_expression'],
-        [',', '_expression']
+        ['~', '_expression']
     ],
     '_list': [
         ['(', '_list-tail']
@@ -123,7 +123,7 @@ var attributeGrammar = analyzer.analyzer({
         case '`' :
             result.push(word.new('quaziquote'));
             break;
-        case ',' :
+        case '~' :
             result.push(word.new('unquote'));
             break;
         }
@@ -211,6 +211,7 @@ var attributeGrammar = analyzer.analyzer({
     '_atom': function(tree) {
         switch (tree[0].type) { // perhaps without a switch??
         case 'word' :
+            // TODO: add in regexp check
             return word.new(tree[0].text);
             break;
         case 'string' :

@@ -1,0 +1,209 @@
+% Created 2012-12-05 Wed 10:20
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{hyperref}
+
+
+\title{README}
+\author{Sam}
+\date{05 December 2012}
+
+\begin{document}
+
+\maketitle
+
+\setcounter{tocdepth}{3}
+\tableofcontents
+\vspace*{1cm}
+  Hot Cocoa Lisp is a dialect of Lisp designed to be compiled into or
+  interpreted in Javascript.  It has been said that Javascript is
+  Scheme in C's Clothes.  Hot Cocoa Lisp is an attempt to put it back
+  in Schemes clothes.
+\section{HOT COCOA LISP}
+\label{sec-1}
+
+
+\subsection{High Level Design Goals}
+\label{sec-1.1}
+
+\begin{itemize}
+\item Provide a clean, intuitive interface to existing
+     Javascript libraries/frameworks
+\item Use the minimal syntax of Lisp
+\item Retain the good features of Javascript
+     (first-class functions with closures, Dynamic objects with prototypes,
+     Object literals).
+\item Leave out the bad features of Javascript.
+     (Global variables, type coersion, etc.)
+\end{itemize}
+\subsection{Concerns}
+\label{sec-1.2}
+
+   One of the major questions I still have is where my compiler will fall
+   between two particular extremes.  The first extreme is to simply generate
+   a Lisp parse tree, define eval (and realistically a few other things) in
+   Javascript, and simply run eval on the parse tree.  The second extreme is
+   generating Javascript code that looks nothing like the HCL code it came
+   from.  Because I'm not terribly interested in diving down the rabbit hole
+   of compiler optimization, I suspect I will fall a bit closer to the former.
+   
+   Another concern I have is how exactly I want to handle including code from
+   other files.  In code targeted at node, the node ``require'' method should work
+   fine:
+   
+\begin{verbatim}
+    var lib = require("./lib.js")
+\end{verbatim}
+
+   
+   could become
+   
+\begin{verbatim}
+    (define lib (require "./lib.hcl"))
+\end{verbatim}
+
+   
+   and in theory, I could even include source files from Javascript \emph{or} HCL
+   this way by looking at the file extension.  One possibility for browser
+   implementations is creating an analogous require function that loads source
+   libraries via AJAX and compiles them in the browser.  Alternately, multiple
+   compiled HCL files could be loaded via separate script tags and one could be
+   designated the ``main'' one (through a compiler directive or the like) and be
+   would then be able to access the others via a require method.
+   
+\subsection{Javascript objects}
+\label{sec-1.3}
+
+   To fascilitate interoperability, HCL objects work almost exactly
+   the same as Javascript objects with a few exceptions.
+   
+\subsubsection{literal notation}
+\label{sec-1.3.1}
+
+    Object literals can declared in one of two ways:
+    
+\begin{verbatim}
+     {a 1 b 2}
+\end{verbatim}
+
+    
+    OR
+    
+\begin{verbatim}
+     (object a 1 b 2)
+\end{verbatim}
+
+    
+    The first is translated by the parser into the second.  In either
+    case an even number of arguments is expected and they interpreted
+    pairwise as key-value pairs.
+    
+\subsubsection{access notation}
+\label{sec-1.3.2}
+
+\begin{description}
+
+\item[Getting]\label{sec-1.3.2.1}
+
+
+     The simplest way to access a property of an object is using the
+     familiar dotted notation from Javascript:
+     
+\begin{verbatim}
+      obj.key
+\end{verbatim}
+
+     
+     Or the more lisp-like:
+     
+\begin{verbatim}
+      (. obj key)
+\end{verbatim}
+
+     
+     As before the first is translated to the second by the parser.
+     
+     Access in this form can also be chained (e.g.):
+     
+\begin{verbatim}
+      obj.key1.key2
+      (. obj key1 key2)
+\end{verbatim}
+
+     
+     The first argument of \emph{.} can be either a symbol bound to an
+     object in scope or an list expression evaluating to an object:
+     
+\begin{verbatim}
+      (. (expression-evaluating-to-object) key)
+      (expression-evaluating-to-object).key
+\end{verbatim}
+
+     
+     where \emph{obj.key1} is another object that has the key \emph{key2}. Just
+     like the dotted notation in Javascript, this notation only works
+     when you know the names of the keys before runtime.  If the name
+     of the key is the result of a computation then you can use the
+     \emph{get} function:
+     
+\begin{verbatim}
+      (get obj "key")
+      (get obj 'key)
+      (get obj (expression-evaluating-to-key))
+\end{verbatim}
+
+     
+     Unlike the \emph{.} special form, \emph{get} evaluates all of it's
+     arguments and is equivalent to the javascript square bracket
+     notation.
+     
+\end{description}
+\begin{description}
+
+\item[Setting]\label{sec-1.3.2.2}
+
+
+     When the \emph{set} special form takes an object as it's first a key
+     as its second and a value as it's third.  All three arguments are
+     evaluated.
+     
+\begin{verbatim}
+      (set obj 'key value)
+      (set obj (expression-evaluatin-to-key) value)
+\end{verbatim}
+
+     
+\end{description}
+\subsubsection{method notation}
+\label{sec-1.3.3}
+
+    When a property of an object is a function and it is accessed
+    using the \emph{.} special form, it is returned with a wrappper
+    function that calls the function context of the object.  This
+    ensures that \emph{this} will refer to \emph{obj} in the context of a the
+    call:
+    
+\begin{verbatim}
+     (obj.method args..)
+\end{verbatim}
+
+    
+    When a function is accessed via \emph{get}, it is returned normally
+    without a wrapper.
+    
+    Additionally functions can be called using \emph{call} and \emph{apply}
+    which specify a context to referred to by \emph{this}:
+    
+\begin{verbatim}
+     (call method context args..)
+     (apply method context arg-list)
+\end{verbatim}
+
+    
+    Wrapped functions will have their call and apply methods
+    overridden to make them work correctly with call and apply.
+
+\end{document}

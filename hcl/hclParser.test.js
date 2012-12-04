@@ -21,7 +21,7 @@ var tests = [
         return string2hcl('\'(1 2 3)').bare(); },
      ['quote', [1, 2, 3]]],
     [function() {
-        return string2hcl('\`(1 2 ,(- 4 1))').bare(); },
+        return string2hcl('\`(1 2 ~(- 4 1))').bare(); },
      ['quaziquote', [1, 2, ['unquote', ['-', 4, 1]]]]],
     [function() {
         return string2hcl('(+ 1 2)').bare(); },
