@@ -39,25 +39,33 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
-var firstMatch = function(tokenTypes, text, pointer) {
+var firstMatch = function(tokenTypes, text, position) {
     for (var i = 0; i < tokenTypes.length; i++) {
         var match = tokenTypes[i].re.exec(text);
         if (match) {
-            return { type:tokenTypes[i].t, text:match[0], position:pointer };
+            return { type:tokenTypes[i].t, text:match[0], position:position };
         }
     }
-    throw 'unrecognizable token at position ' + pointer;
+    throw 'unrecognizable token at ' + position.join(':');
 }
 
 exports.scan = function(tokenTypes, text) {
     var tokenList = [];
     var pointer = 0;
+    var line = 1;
+    var column = 0;
     while (pointer < text.length) {
-        var match = firstMatch(tokenTypes, text.substring(pointer), pointer);
-        if (match.type !== 'whitespace') {
+        var match = firstMatch(tokenTypes, text.substring(pointer),
+                               [line, column]);
+        if (match.type !== 'whitespace' && match.type !== 'comment') {
             tokenList.push(match);
         }
         pointer += match.text.length;
+        line += (match.text.match(/\n/g) || []).length;
+        column += match.text.length;
+        if (match.text.match(/\n/)) {
+            column = match.text.match(/\n([^\n]*)$/)[1].length
+        }
     }
     return tokenList;
 };

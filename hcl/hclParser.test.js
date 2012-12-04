@@ -15,6 +15,9 @@ var tests = [
         return string2hcl('\'()').bare(); },
      ['quote', []]],
     [function() {
+        return string2hcl('(a\nb)').bare(); },
+     ['a', 'b']],
+    [function() {
         return string2hcl('\'(1 2 3)').bare(); },
      ['quote', [1, 2, 3]]],
     [function() {
@@ -27,6 +30,12 @@ var tests = [
         return string2hcl('[]').bare(); },
      ['list']],
     [function() {
+        return string2hcl(';; foo\n[]').bare(); },
+     ['list']],
+    [function() {
+        return string2hcl('[1];; bar\n').bare(); },
+     ['list', 1]],
+    [function() {
         return string2hcl('[1 2 3]').bare(); },
      ['list', 1, 2, 3]],
     [function() {
@@ -35,6 +44,9 @@ var tests = [
     [function() {
         return string2hcl('{a 1 b 2}').bare(); },
      ['object', 'a', 1, 'b', 2]],
+    [function() {
+        return string2hcl('{a [1 2 3] b [{x 4} {x 5} {x 6}]}').bare(); },
+     ['object', 'a', ['list', 1, 2, 3], 'b', ['list', ['object', 'x', 4], ['object', 'x', 5], ['object', 'x', 6]]]],
     [function() {
         return string2hcl('foo.bar').bare(); },
      ['.', 'foo', 'bar']],
