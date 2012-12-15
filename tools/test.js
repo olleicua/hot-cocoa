@@ -61,5 +61,5 @@ exports.test = function(tests) {
     }
     
     console.log(template.format("Passed ~~ of ~~ tests.",
-                                [passed, tests.length]);
+                                [passed, tests.length]));
 };

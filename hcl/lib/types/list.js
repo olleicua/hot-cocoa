@@ -13,7 +13,11 @@ _List.type = "list";
 _List.bare = function() {
     var result = [];
     for (var i = this.zero_index; i < this.values.length; i++) {
-        result.push(this.values[i].bare());
+        if (this.values[i].bare !== undefined) {
+            result.push(this.values[i].bare());
+        } else {
+            result.push(this.values[i]);
+        }
     }
     return result;
 }
@@ -49,11 +53,15 @@ _List.copy = function() { // deep copy
 _List.get = function(index) {
     if (index.type === 'number') {
         var _index = index.value
-        while (_index < 0) { // make negatives wrap around
-            _index += this.size();
-        }
-        return this.values[this.zero_index + _index];
-    } // should return undefined be explicit?
+    } else if (typeof(index) === 'number') {
+        var _index = index
+    } else {
+        return undefined;
+    }
+    while (_index < 0) { // make negatives wrap around
+        _index += this.size();
+    }
+    return this.values[this.zero_index + _index];
 }
 _List.set = function(index, value) {
     if (index.type === 'number') {

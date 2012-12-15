@@ -6,7 +6,6 @@ var hcl = require('./hclParser.js');
 var string2hcl = function(string) {
     var tokens = hcl.scan(string);
     var tree = hcl.parse(tokens);
-    //console.log('\n', JSON.stringify(tokens));
     return hcl.analyze(tree)[0];
 };
 

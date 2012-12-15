@@ -13,7 +13,11 @@ _Object.type = "object";
 _Object.bare = function() {
     var result = {};
     for (var i = 0; i < this.keys.length; i++) {
-        result[this.keys[i]] = this.get(this.keys[i]).bare();
+        if (this.get(this.keys[i]).bare !== undefined) {
+            result[this.keys[i]] = this.get(this.keys[i]).bare();
+        } else {
+            result[this.keys[i]] = JSON.stringify(this.get(this.keys[i]));
+        }
     }
     return result;
 };
