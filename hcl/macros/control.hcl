@@ -1,3 +1,9 @@
+(macro begin (statements...)
+       `(js "(~~)" ~(statements.join ", ")))
+
+(macro if (condition yes no)
+       `(js "(~~ ? ~~ : ~~)" ~condition ~yes ~no))
+
 (macro def (name value)
        `(js "var ~~ = ~~" ~name ~value))
 

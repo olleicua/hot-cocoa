@@ -31,6 +31,10 @@ var quaziquote = function(ast) {
             return quaziquote(value);
         });
     }
+
+    // TODO: add macro-exists here
+
+    // TODO: add compile error here
     
     // atom
     return ast.bare();

@@ -67,7 +67,7 @@
    (= "x" "x") ; true
    (= 'x "x") ; false
 
-** is?
+** is
    Arguments: values*
    
    Returns true only if all arguments refer to the same object.
@@ -116,15 +116,6 @@
    x ; off
    (foo false)
    x ; on
-
-** xor
-   Argumets: value1 value2
-   
-   Return true if one argument is truthy and the other falsey.
-   Otherwise return false;
-   
-   Examples:
-   (xor true false) ; true
    
 * Assignement
 ** set
@@ -198,7 +189,7 @@
    to the function return true.
    
    Examples:
-   (filter (# (x) (= 0 (mod x 2))) (range 4)) ; [0, 2]
+   (filter (# (x) (is 0 (mod x 2))) (range 4)) ; [0, 2]
 
 ** reduce
    Arguments: function, list [, initial]
@@ -220,8 +211,8 @@
    is true otherwise evaluates and returns the third.
    
    Examples:
-   (if (= 1 1) "yes" "no") ; "yes"
-   (if (= 1 2) "yes" "no") ; "no"
+   (if (is 1 1) "yes" "no") ; "yes"
+   (if (is 1 2) "yes" "no") ; "no"
    
 ** when
    Arguments: condition, expressions
@@ -230,8 +221,8 @@
    if the first is true and returns the last.
    
    Examples:
-   (when (= 1 1) "yes") ; "yes"
-   (if (= 1 2) "yes") ; null
+   (when (is 1 1) "yes") ; "yes"
+   (if (is 1 2) "yes") ; null
 
 ** cond
    Arguments: pairs
