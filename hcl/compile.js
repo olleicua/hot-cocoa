@@ -9,10 +9,11 @@ var string2ast = function(string) {
 
 // TODO: fix the infrastructure
 // all types need a 'stringify' method as well as a bare method
-// perhaps not infrastructure is needed at all...?
+// perhaps no infrastructure is needed at all...?
 // I think I want to leave everything literal except for strings and words which
-// will be objects with a relevant toJSON method implemented:
+// will be objects with a relevant .toJSON method implemented:
 // https://developer.mozilla.org/en-US/docs/JSON
+// possibly also overriding all of the .toString methods..?
 
 var macros = {};
 
@@ -42,6 +43,7 @@ var compile = function(ast) {
         
         // formatted javascript
         if (ast.first().bare() === 'quote') {
+            // TODO: quoted words need to be represented somehow..?
             return ast.get(1).bare();
         }
         

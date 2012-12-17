@@ -6,11 +6,15 @@
  * http://opensource.org/licenses/mit-license.php
  */
 
+/*
 var number = require('./lib/types/number.js');
 var string = require('./lib/types/string.js');
 var word = require('./lib/types/word.js');
 var list = require('./lib/types/list.js');
 var boolean = require('./lib/types/boolean.js');
+*/
+
+var types = require('./lib/types.js');
 var scanner = require('../tools/scanner.js');
 var parser = require('../tools/parser.js');
 var analyzer = require('../tools/analyzer.js');
@@ -114,16 +118,16 @@ var attributeGrammar = analyzer.analyzer({
         return this.analyze(tree[0]);
     },
     '_puncuated-list': function(tree) {
-        var result = list.new();
+        var result = types.list([]);
         switch (tree[0].type) {
         case '\'' :
-            result.push(word.new('quote'));
+            result.push(types.word('quote'));
             break;
         case '`' :
-            result.push(word.new('quaziquote'));
+            result.push(types.word('quaziquote'));
             break;
         case '~' :
-            result.push(word.new('unquote'));
+            result.push(types.word('unquote'));
             break;
         }
         result.push(this.analyze(tree[1]));
@@ -136,7 +140,7 @@ var attributeGrammar = analyzer.analyzer({
         if (tree[0].type === '_expression') {
             var result = this.analyze(tree[1], this.analyze(tree[0]));
         } else {
-            var result = list.new();
+            var result = types.list([]);
         }
         if (beginning) {
             result.unshift(beginning);
@@ -144,11 +148,11 @@ var attributeGrammar = analyzer.analyzer({
         return result;
     },
     '_literal-list': function(tree) {
-        var result = list.new();
-        result.push(word.new('list'));
+        var result = types.list([]);
+        result.push(types.word('list'));
         var body = this.analyze(tree[1]);
-        for (var i = 0; i < body.values.length; i++) {
-            result.push(body.values[i]);
+        for (var i = 0; i < body.length; i++) {
+            result.push(body[i]);
             // FIXME: the list wrappers are unneccessary and thus
             // so are the '.values's here
             // ???
@@ -159,11 +163,11 @@ var attributeGrammar = analyzer.analyzer({
         return this['_list-tail'](tree, beginning);
     },
     '_object': function(tree) {
-        var result = list.new();
-        result.push(word.new('object'));
+        var result = types.list([]);
+        result.push(types.word('object'));
         var body = this.analyze(tree[1]);
-        for (var i = 0; i < body.values.length; i++) {
-            result.push(body.values[i]);
+        for (var i = 0; i < body.length; i++) {
+            result.push(body[i]);
             // FIXME: the list wrappers are unneccessary and thus
             // so are the '.values's here
             // ???
@@ -180,7 +184,7 @@ var attributeGrammar = analyzer.analyzer({
             var result = this.analyze(tree[2], [this.analyze(tree[0]),
                                                 this.analyze(tree[1])]);
         } else {
-            var result = list.new();
+            var result = types.list([]);
         }
         if (key && value) {
             result.unshift(value);
@@ -189,8 +193,8 @@ var attributeGrammar = analyzer.analyzer({
         return result;
     },
     '_dotted-chain': function(tree) {
-        var result = list.new();
-        result.push(word.new('.'));
+        var result = types.list([]);
+        result.push(types.word('.'));
         result.push(this.analyze(tree[0].tree[0]));
         result.push(this.analyze(tree[2]));
         var body = this.analyze(tree[3]);
@@ -211,16 +215,17 @@ var attributeGrammar = analyzer.analyzer({
         switch (tree[0].type) { // perhaps without a switch??
         case 'word' :
             // TODO: add in regexp check
-            return word.new(tree[0].text);
+            // this may need to be a separate macro..
+            return types.word(tree[0].text);
             break;
         case 'string' :
-            return string.new(tree[0].text);
+            return types.string(tree[0].text);
             break;
         case 'number' :
-            return number.new(tree[0].text);
+            return types.number(tree[0].text);
             break;
         case 'boolean' :
-            return boolean.new(tree[0].text);
+            return types.boolean(tree[0].text);
             break;
         }
     },

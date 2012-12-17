@@ -13,7 +13,7 @@
        `(js "~~[~~]" ~object ~key))
 
 (macro set (object key value)
-       `(js "~~[~~] = " ~object ~key ~value))
+       `(js "~~[~~] = ~~" ~object ~key ~value))
 
 ;; FIXME:
 ;; the above need to better account for keys that can be words, numbers,

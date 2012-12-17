@@ -11,68 +11,74 @@ var string2hcl = function(string) {
 
 var tests = [
     [function() {
-        return string2hcl('\'()').bare(); },
-     ['quote', []]],
+        return string2hcl('\'()').json(); },
+     '[quote, []]'],
     [function() {
-        return string2hcl('(a\nb)').bare(); },
-     ['a', 'b']],
+        return string2hcl('(a\nb)').json(); },
+     '[a, b]'],
     [function() {
-        return string2hcl('\'(1 2 3)').bare(); },
-     ['quote', [1, 2, 3]]],
+        return string2hcl('\'(1 2 3)').json(); },
+     '[quote, [1, 2, 3]]'],
     [function() {
-        return string2hcl('\`(1 2 ~(- 4 1))').bare(); },
-     ['quaziquote', [1, 2, ['unquote', ['-', 4, 1]]]]],
+        return string2hcl('\`(1 2 ~(- 4 1))').json(); },
+     '[quaziquote, [1, 2, [unquote, [-, 4, 1]]]]'],
     [function() {
-        return string2hcl('(+ 1 2)').bare(); },
-     ['+', 1, 2]],
+        return string2hcl('(+ 1 2)').json(); },
+     '[+, 1, 2]'],
     [function() {
-        return string2hcl('[]').bare(); },
-     ['list']],
+        return string2hcl('(cat "hello" " world")').json(); },
+     '[cat, "hello", " world"]'],
     [function() {
-        return string2hcl(';; foo\n[]').bare(); },
-     ['list']],
+        return string2hcl('[]').json(); },
+     '[list]'],
     [function() {
-        return string2hcl('[1];; bar\n').bare(); },
-     ['list', 1]],
+        return string2hcl(';; foo\n[]').json(); },
+     '[list]'],
     [function() {
-        return string2hcl('[1 2 3]').bare(); },
-     ['list', 1, 2, 3]],
+        return string2hcl('[1];; bar\n').json(); },
+     '[list, 1]'],
     [function() {
-        return string2hcl('{}').bare(); },
-     ['object']],
+        return string2hcl('[1 2 3]').json(); },
+     '[list, 1, 2, 3]'],
     [function() {
-        return string2hcl('{a 1 b 2}').bare(); },
-     ['object', 'a', 1, 'b', 2]],
+        return string2hcl('{}').json(); },
+     '[object]'],
     [function() {
-        return string2hcl('{a [1 2 3] b [{x 4} {x 5} {x 6}]}').bare(); },
-     ['object', 'a', ['list', 1, 2, 3], 'b', ['list', ['object', 'x', 4], ['object', 'x', 5], ['object', 'x', 6]]]],
+        return string2hcl('{a 1 b 2}').json(); },
+     '[object, a, 1, b, 2]'],
     [function() {
-        return string2hcl('foo.bar').bare(); },
-     ['.', 'foo', 'bar']],
+        return string2hcl('{a [1 2 3] b [{x 4} {x 5} {x 6}]}').json(); },
+     '[object, a, [list, 1, 2, 3], b, [list, [object, x, 4], [object, x, 5], ' +
+     '[object, x, 6]]]'],
     [function() {
-        return string2hcl('foo.bar.baz').bare(); },
-     ['.', 'foo', 'bar', 'baz']],
+        return string2hcl('foo.bar').json(); },
+     '[., foo, bar]'],
     [function() {
-        return string2hcl('(a b).c.d').bare(); },
-     ['.', ['a', 'b'], 'c', 'd']],
+        return string2hcl('foo.bar.baz').json(); },
+     '[., foo, bar, baz]'],
     [function() {
-        return string2hcl('(console.log "Hello World!")').bare(); },
-     [['.', 'console', 'log'], 'Hello World!']],
+        return string2hcl('(a b).c.d').json(); },
+     '[., [a, b], c, d]'],
+    [function() {
+        return string2hcl('(console.log "Hello World!")').json(); },
+     '[[., console, log], "Hello World!"]'],
     [function() {
         return string2hcl('(($ "div#foo").css "background-color" \
-                                              "#ffaaaa")').bare(); },
-     [[".", ["$", "div#foo"], "css"], "background-color", "#ffaaaa"]],
+                                              "#ffaaaa")').json(); },
+     '[[., [$, "div#foo"], css], "background-color", "#ffaaaa"]'],
     [function() {
         return string2hcl('(($ "div#foo").css { background-color "#ffaaaa" \
-                                                padding "5em"})').bare(); },
-     [[".", ["$", "div#foo"], "css"], ["object", "background-color", "#ffaaaa",
-                                                    "padding", "5em"]]],
+                                                padding "5em"})').json(); },
+     '[[., [$, "div#foo"], css], [object, background-color, "#ffaaaa", ' +
+     'padding, "5em"]]'],
     [function() {
-        return string2hcl('(def empty? (# (l) (= 0 (length l))))').bare(); },
-     ['def', 'empty?', ['#', ['l'], ['=', 0, ['length', 'l']]]]],
+        return string2hcl('(def empty? (# (l) (= 0 (length l))))').json(); },
+     '[def, empty?, [#, [l], [=, 0, [length, l]]]]'],
     [function() {
-        return string2hcl('(def empty? (# (l) (if (= 0 (length l)) true false)))').bare(); },
-     ['def', 'empty?', ['#', ['l'], ['if', ['=', 0, ['length', 'l']], true, false]]]]
+        return string2hcl(
+            '(def empty? (# (l) (if (= 0 (length l)) true false)))'
+        ).json(); },
+     '[def, empty?, [#, [l], [if, [=, 0, [length, l]], true, false]]]']
 ];
 
 require('../tools/test.js').test(tests);
