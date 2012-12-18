@@ -10,9 +10,11 @@ var string2ast = function(string) {
 
 var macros = {};
 
-var apply_macros = function(ast) {
-	// TODO: implement this
-	return ast;
+// returns a copy of the ast with all macros applied to it.
+// calls apply_callback(macro, ast) after each successful macro application.
+var apply_macros = function(ast, apply_callback) {
+    // TODO: implement this
+    return ast;
 }
 
 var quaziquote = function(ast) {
@@ -70,6 +72,8 @@ var compile = function(ast) {
         return template.format('~~(~~)', [
             compile(ast[0]),
             types.list(ast.slice(1)).map(function(value) {
+                // is this right??
+                // (console.log 'foo) should print "foo" but currently doesn't
                 return compile(value);
             }).join(', ')
         ]);
@@ -86,19 +90,36 @@ exports.compile = function(text) {
     var compiled_statements = [];
     var asts = string2ast(text);
     
+    // find macros
     for (var i = 0; i < asts.length; i++) {
-        var prepared_ast = apply_macros(asts[i]);
-        // FIXME: macros should recursively apply to themselves..
-        // I think this means a first pass to store macros
-        if (prepared_ast[0].json() === 'macro') {
-            var name = macros[prepared_ast[1].json()];
-            if (name) {
+        var ast = asts[i];
+        if (ast[0].json() === 'macro') {
+            var name = macros[ast[1].json()];
+            if (name !== undefined) {
                 throw new Error('There is already a macro called ' + name);
                 // TODO: add line number
             }
-            macros[name] = prepared_ast;
-        } else {
-            compiled_statements.push(compile(prepared_ast) + ';');
+            macros[name] = ast;
+        }
+    }
+    
+    // apply macros to macros
+    var macros_left_to_apply = true;
+    var macro_names = Object.keys(macros);
+    while (macros_left_to_apply) { // repeat loop until no macros are applied
+        macros_left_to_apply = false;
+        for (var i = 0; i < macro_names.length; i++) {
+            var m = macro_names[i]; 
+            macros[m] = apply_macros(macros[m], function() {
+                macros_left_to_apply = true;
+            });
+        }
+    }
+    
+    // compile code
+    for (var i = 0; i < asts.length; i++) {
+        if (ast[0].json() !== 'macro') {
+            compiled_statements.push(compile(apply_macros(asts[i])) + ';');
         }
     }
     

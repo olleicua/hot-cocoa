@@ -264,3 +264,11 @@
    Examples:
    (each ["foo" "bar" "baz"]
          (# (word) (console.log word))) ; outputs "foo\nbar\nbaz\n"
+** each-pair
+   Arguments: object, function
+   
+   Calls the function on each key value pair in the object
+   
+   Examples:
+   (each {f "foo" b "bar"}
+         (# (k v) (console.log k v))) ; outputs "f foo\nb bar\n"
