@@ -22,7 +22,7 @@ var analyzer = require('../tools/analyzer.js');
 var tokenTypes = [ // TODO: add T and NIL
     { t:'boolean', re:/^(true|false|null|undefined)/ },
     { t:'number', re:/^-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][-+]?[0-9]+)?/ },
-    { t:'string', re:/^"(\\"|[^"])*"/ },
+    { t:'string', re:/^"(\\.|[^\\"])*"/ },
     { t:'word', re:/^([a-zA-Z_!?$%&@#|*+\-=\/<>^][a-zA-Z0-9_!?$%&@#|*+\-=\/<>^]*)(\.{3})?/ },
     { t:'(', re:/^\(/ },
     { t:')', re:/^\)/ },
@@ -34,7 +34,7 @@ var tokenTypes = [ // TODO: add T and NIL
     { t:'`', re:/^`/ },
     { t:'~', re:/^~/ },
     { t:'.', re:/^\./ },
-    { t:'comment', re:/^;[^\n]*\n/ },
+    { t:'comment', re:/^(;[^\n]*\n|;.*$)/ },
     { t:'whitespace', re:/^[\s,:]+/ }
 ];
 

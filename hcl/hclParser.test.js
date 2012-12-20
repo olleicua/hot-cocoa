@@ -11,6 +11,12 @@ var string2hcl = function(string) {
 
 var tests = [
     [function() {
+        return string2hcl('"this is a quote: \\" ..."').json(); },
+     '"this is a quote: \\" ..."'],
+    [function() {
+        return string2hcl('"this is a backslash: \\\\" ; this is a comment').json(); },
+     '"this is a backslash: \\\\"'],
+    [function() {
         return string2hcl('\'()').json(); },
      '[quote, []]'],
     [function() {
