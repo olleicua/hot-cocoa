@@ -21,13 +21,13 @@
 ;; .. or do they?
 
 (macro first (list)
-	   `(js "~~[0]" ~list))
+       `(js "~~[0]" ~list))
 
 (macro car (list)
-	   `(first ~list))
+       `(first ~list))
 
 (macro rest (list)
-	   `(js "~~.slice(1)" ~list))
+       `(js "~~.slice(1)" ~list))
 
 (macro cdr (list)
-	   `(rest ~list))
+       `(rest ~list))

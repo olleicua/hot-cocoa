@@ -213,6 +213,9 @@ var attributeGrammar = analyzer.analyzer({
     },
     '_atom': function(tree) {
         switch (tree[0].type) { // perhaps without a switch??
+        case '.' :
+            return types.word('.');
+            break;
         case 'word' :
             // TODO: add in regexp check
             // this may need to be a separate macro..
