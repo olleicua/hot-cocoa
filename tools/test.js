@@ -3,6 +3,10 @@
 
 var template = require('./template.js');
 
+// check for -v flag
+var VERBOSE = process.argv.indexOf('-v') !== -1;
+
+// an equivalence relation that does full comparison of objects/arrays
 var equivalent = function(value1, value2) {
     
     if (typeof(value1) !== typeof(value2)) {
@@ -47,6 +51,9 @@ exports.test = function(tests) {
                 test_value = test_value();
             } catch (error) {
                 test_value = error.toString();
+                if (VERBOSE) {
+                    console.log(error.stack);
+                }
             }
         }
         
