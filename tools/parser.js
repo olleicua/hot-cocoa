@@ -73,11 +73,12 @@ exports.parse = function(tokens, grammar, start_node) {
         if (result[1] === tokens.length) {
             return [result[0]];
         } else {
-            throw 'unexpected token of type ' + tokens[result[1]].type +
-                ': ' + tokens[result[1]].text + ' at position ' +
-                tokens[result[1]].position ;
+            throw new Error('unexpected token of type ' +
+                            tokens[result[1]].type + ': ' +
+                            tokens[result[1]].text + ' at position ' +
+                            tokens[result[1]].position) ;
         }
     } else {
-        throw 'parse error';
+        throw new Error('parse error');
     }
 }
