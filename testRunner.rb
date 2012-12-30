@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+VERBOSE = (ARGV.index "-v") ? "-v" : ""
+
 def getChildren dir, file_pattern=/./, dir_pattern=nil
   
   # validate directory
@@ -31,7 +33,7 @@ passed = 0
 (getChildren ".", /\.test\./, /\/tests\b/).each do |file|
   if /\.js$/.match file
     puts "\n#{file}"
-    test = `node #{file}`
+    test = `node #{file} #{VERBOSE}`
     puts test
     _,t,p = (/Passed (\d+) of (\d+) tests\./.match test).to_a
     total += t.to_i
