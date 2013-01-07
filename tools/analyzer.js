@@ -41,12 +41,17 @@
  */
 
 exports.analyzer = function(grammar) {
+	
+	// process the tree below the passed node using the method from the grammar
+	// corresponding to the node's type.
     grammar.analyze = function(node, args) {
         if (node.tree !== undefined) {
             return this[node.type](node.tree, args);
         }
         return this[node.type](node, args);
     };
+	
+	// process each node of the tree and return the result
     grammar.apply = function(tree) {
         var results = [];
         for (var i = 0; i < tree.length; i++) {

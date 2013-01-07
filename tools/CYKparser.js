@@ -1,11 +1,12 @@
 /* Parser in Javascript
  * 
  * This is a simple CYK parser using an abstract JSON grammar
- * notation of my own design.  The grammar consists of an object relating a
+ * notation of my own design.  The grammar consists of an object relating any
  * non-terminal to an array of arrays of strings.  Each of the inner arrays
  * represents one of the possible expansions of the non-terminal and consists of
  * both non-terminals and terminals.  The non-terminals are distinguished only
- * by their inclusion as keys in the grammar.
+ * by their inclusion as keys in the grammar however there is also a notational
+ * convention of beginning non-terminals with '_'s.
  * 
  * The scanner should generate an array of token objects.  Each token object
  * must have a "type" property which will be used in the grammar, and may
