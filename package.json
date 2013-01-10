@@ -1,0 +1,17 @@
+{
+  "name": "hot-cocoa",
+  "version": "0.0.0",
+  "author": "Sam Auciello <info@samauciello.com>",
+  "description": "A set of tools for implementing languages in Node.js",
+  "main": "./main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olleicua/language-design.git"
+  },
+  "keywords": [
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.9"
+  }
+}
