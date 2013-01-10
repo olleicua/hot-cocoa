@@ -61,9 +61,14 @@ var passed = 0;
 		exec(commands.shift(), function(error, stdout, stderr) {
 			console.log(files.shift());
 			console.log(stdout);
+			if (stderr) {
+				console.log(stderr);
+			}
 			var m = /Passed (\d+) of (\d+) tests\./.exec(stdout);
-			total += parseInt(m[1]);
-			passed += parseInt(m[2]);
+			if (m) {
+				passed += parseInt(m[1]);
+				total += parseInt(m[2]);
+			}
 			runTests();
 		});
 	} else {
