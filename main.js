@@ -5,10 +5,10 @@ exports.scan = require('./lib/scanner.js').scan;
 exports.RD = 1;
 exports.CYK = 2;
 exports.parse = function(tokens, grammar, start_node, algorithm) {
-	if (algorithm === this.RD) {  // use recursive descent
-		return require('./lib/RDparser.js').parse(tokens, grammar, start_node);
-	} // use CYK
-	return require('./lib/CYKparser.js').parse(tokens, grammar, start_node);
+    if (algorithm === this.RD) {  // use recursive descent
+        return require('./lib/RDparser.js').parse(tokens, grammar, start_node);
+    } // use CYK
+    return require('./lib/CYKparser.js').parse(tokens, grammar, start_node);
 }
 
 // analyzer
