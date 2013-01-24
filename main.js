@@ -17,7 +17,6 @@ exports.analyzer = require('./lib/analyzer.js').analyzer;
 // template
 exports.format = require('./lib/template.js').format;
 exports.template_map = require('./lib/template.js').template_map;
-exports.template_helpers = require('./lib/template.js').helpers;
 exports.formatFile = require('./lib/template.js').load;
 
 // test
