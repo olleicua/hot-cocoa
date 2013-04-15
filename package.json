@@ -1,20 +1,23 @@
 {
-    "name": "hot-cocoa",
-    "version": "0.0.0",
-    "author": "Sam Auciello <info@samauciello.com>",
-    "description": "A set of tools for implementing languages in Node.js",
-    "main": "./main.js",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/olleicua/language-design.git"
-    },
-    "bin": {
-        "hot-cocoa-test": "./bin/testrunner.js"
-    },
-    "keywords": [
-    ],
-    "license": "MIT",
-    "engines": {
-        "node": ">=0.8.9"
-    }
+  "name": "hot-cocoa",
+  "version": "0.0.3",
+  "author": "Sam Auciello <info@samauciello.com>",
+  "description": "A set of tools for implementing languages in Node.js",
+  "main": "./main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olleicua/hot-cocoa.git"
+  },
+  "bin": {
+    "hot-cocoa-test": "./bin/testrunner.js"
+  },
+  "keywords": [
+  ],
+  "dependencies": {
+    "underscore": "1.4.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.8.9"
+  }
 }
