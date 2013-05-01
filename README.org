@@ -58,8 +58,8 @@ grammar.  For example, a scanner could break up the string
 : '(foo bar ) ( baz qux )'
 
 into tokens representing words and parentheses but a parser would be
-needed to determine that <code>foo</code> and <code>bar</code> are grouped
-together and that <code>baz</code> and <code>qux</code> are separately grouped
+needed to determine that ~foo~ and ~bar~ are grouped
+together and that ~baz~ and ~qux~ are separately grouped
 together.
 
 I implemented two different parsing algorithms with the same
