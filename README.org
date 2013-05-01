@@ -5,13 +5,14 @@ of code, a semantic analysis system for applying meaning to that
 structure, a templating system for generating compiled code, a system for organizing built-in
 functions, and a testing system for making sure that everything works.  The project is hosted at
 https://github.com/olleicua/hot-cocoa.  It can be included in a
-project using npm\cite{npm} with: 
+project using npm with: 
 
 : $ npm install hot-cocoa
 
 * Parsing
 
-My parsing system was based on the discussion of parsing in \\ _Programming Language Pragmatics_ by Michael L. Scott. \cite[ch. 2]{plp}
+My parsing system was based on the discussion of parsing in 
+_Programming Language Pragmatics_ by Michael L. Scott. 
 The system works in two stages: scanning the original source for
 tokens and parsing a sequence of tokens into a parse tree.  The
 scanner's purpose is to divide a string of raw code into the smallest
@@ -27,13 +28,12 @@ following:
 :   { t:'whitespace', re:/^\s+/ } // one or more whitespace characters
 : ];
 
-\noindent
 In a loop, the scanner tries each of the regular expressions in the
 token type list until one matches at the beginning of the source code,
 creates a new token object of the associated type with the matched
 string as a value, and shifts the matched string off of the beginning
-of the source code.  A token type with the name \verb|whitespace| is
-special.  By default \verb|whitespace| tokens are omitted from the
+of the source code.  A token type with the name <code>whitespace</code> is
+special.  By default <code>whitespace</code> tokens are omitted from the
 result.  The above token type list could transform
 
 : foo 1 2 bar 3 baz qux 4
@@ -58,16 +58,15 @@ grammar.  For example, a scanner could break up the string
 : '(foo bar ) ( baz qux )'
 
 into tokens representing words and parentheses but a parser would be
-needed to determine that \verb|foo| and \verb|bar| are grouped
-together and that \verb|baz| and \verb|qux| are separately grouped
-together. \\
+needed to determine that <code>foo</code> and <code>bar</code> are grouped
+together and that <code>baz</code> and <code>qux</code> are separately grouped
+together.
 
-\noindent
 I implemented two different parsing algorithms with the same
 API.  Recursive descent is the faster of the two, but CYK is
 guaranteed to work for arbitrarily ambiguous grammars in reasonably
-well bounded time ($O(n^3)$) so long as there is at least one valid
-parsing of the input token list.\cite{cyk}  My parsing API takes a
+well bounded time (O(n^3)) so long as there is at least one valid
+parsing of the input token list.  My parsing API takes a
 context-free grammar formatted as a JSON object and a list of tokens
 and returns a JSON parse tree.  Continuing the previous example,
 consider the following grammar:
@@ -86,7 +85,6 @@ consider the following grammar:
 :   ]
 : };
 
-\noindent
 With the above sequence of tokens, this grammar would produce the
 following tree:
 
@@ -130,12 +128,10 @@ following tree:
 
 * Semantic analysis
 
-\noindent
 After the parsing organizes the code into a structure, the next step
 is to extract meaning from that structure using semantic
-analysis.\cite[ch. 4]{plp}  My semantic analysis system provides a mapping from the various node
-types in the tree structure (in this case \verb|_program|,
-\verb|_function|, \verb|_arguments|, \verb|word|, and \verb|number|)
+analysis.  My semantic analysis system provides a mapping from the various node
+types in the tree structure (in this case _program, _function, _arguments, word, and number)
 to functions for handling them.  For a simple interpreted language,
 these functions could return the program's output.  For a more complex
 one like Hot Cocoa Lisp, they return a much simpler data structure
@@ -145,19 +141,17 @@ of a parsing and semantic analysis library is not really necessary.  A much simp
 have been used to generate the abstract syntax tree, but I enjoyed the
 exercise of building up the infrastructure, and I think it helped me
 to build a richer understanding of language implementation as well as
-API design. \\
+API design.
 
 * Templating
 
-\noindent
 When I realized that I was going to make a compiler, it occurred to me
 that I needed a templating system to format the compiled JavaScript
 source.  My templating system mostly consists of a format function
 which takes a format string and a values object or array as arguments.
 Values are interpolated into the format string in place of
-\tttext{\symbol{126}}\verb|TAGNAME|\tttext{\symbol{126}} where
-\verb|'TAGNAME'| is a key in the values object.  If no key is
-specified (i.e. '\~\~') then the key is the integer number of empty
+<code>~TAGNAME~</code> where <code>'TAGNAME'</code> is a key in the values object.  If no key is
+specified (i.e. '~~') then the key is the integer number of empty
 interpolations preceding this one.  For example:
 
 : format("(~~) (~~) (~~)", [1, 7, 19]); // "(1) (7) (19)"
@@ -166,24 +160,21 @@ interpolations preceding this one.  For example:
 
 * Function maps
 
-\noindent
 I also made a system for organizing built-in functions that I called
 function maps.  The basic idea was to have a JavaScript object that
 relates the name of a built-in function to a compilation function that
 generates JavaScript source for that function.  In its most basic
 form, this compilation function can be defined by a format string.
-For example, the Lisp \verb|if| function is simply defined by the
+For example, the Lisp <code>if</code> function is simply defined by the
 format string:
 
 : '(~~ ? ~~ : ~~)'
 
-\noindent
 The function map also keeps track of synonyms and provides a mechanism
-for associating properties with functions. \\
+for associating properties with functions.
 
 * Testing
 
-\noindent
 I also built a test system with two parts.  The first is an API that
 takes an array of pairs (arrays with two elements).  If the first of
 the pair is a function, then it is called inside of a try block, and
@@ -193,7 +184,7 @@ equal.  The API then prints to standard out how many tests were passed
 and what was expected and gotten in any tests that failed.  The second
 part of the system is an executable that recursively scans the current
 working directory and its children for files that match
-\verb|**/tests/*.js| or \verb|**/*.test.js|, executes them with
+<code>**/tests/*.js</code> or <code>**/*.test.js</code>, executes them with
 Node.js, prints their output, and summarizes the number of tests
 tried and passed.  The executable test script can be installed and run using:
 
