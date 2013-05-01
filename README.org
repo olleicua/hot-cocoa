@@ -32,8 +32,8 @@ In a loop, the scanner tries each of the regular expressions in the
 token type list until one matches at the beginning of the source code,
 creates a new token object of the associated type with the matched
 string as a value, and shifts the matched string off of the beginning
-of the source code.  A token type with the name <code>whitespace</code> is
-special.  By default <code>whitespace</code> tokens are omitted from the
+of the source code.  A token type with the name ~whitespace~ is
+special.  By default ~whitespace~ tokens are omitted from the
 result.  The above token type list could transform
 
 : foo 1 2 bar 3 baz qux 4
@@ -150,7 +150,7 @@ that I needed a templating system to format the compiled JavaScript
 source.  My templating system mostly consists of a format function
 which takes a format string and a values object or array as arguments.
 Values are interpolated into the format string in place of
-<code>~TAGNAME~</code> where <code>'TAGNAME'</code> is a key in the values object.  If no key is
+~\~TAGNAME\~~ where ~'TAGNAME'~ is a key in the values object.  If no key is
 specified (i.e. '~~') then the key is the integer number of empty
 interpolations preceding this one.  For example:
 
@@ -165,7 +165,7 @@ function maps.  The basic idea was to have a JavaScript object that
 relates the name of a built-in function to a compilation function that
 generates JavaScript source for that function.  In its most basic
 form, this compilation function can be defined by a format string.
-For example, the Lisp <code>if</code> function is simply defined by the
+For example, the Lisp ~if~ function is simply defined by the
 format string:
 
 : '(~~ ? ~~ : ~~)'
@@ -184,7 +184,7 @@ equal.  The API then prints to standard out how many tests were passed
 and what was expected and gotten in any tests that failed.  The second
 part of the system is an executable that recursively scans the current
 working directory and its children for files that match
-<code>**/tests/*.js</code> or <code>**/*.test.js</code>, executes them with
+~**/tests/*.js~ or ~**/*.test.js~, executes them with
 Node.js, prints their output, and summarizes the number of tests
 tried and passed.  The executable test script can be installed and run using:
 
