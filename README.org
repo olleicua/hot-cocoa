@@ -1,0 +1,201 @@
+Hot Cocoa is a set of JavaScript libraries for implementing
+languages that I built using the Node.js\cite{nodejs} command line
+interface.  It includes a parsing system for determining the structure 
+of code, a semantic analysis system for applying meaning to that
+structure, a templating system for generating compiled code, a system for organizing built-in
+functions, and a testing system for making sure that everything works.  The project is hosted at
+https://github.com/olleicua/hot-cocoa.  It can be included in a
+project using npm\cite{npm} with: 
+
+: $ npm install hot-cocoa
+
+* Parsing
+
+My parsing system was based on the discussion of parsing in \\ _Programming Language Pragmatics_ by Michael L. Scott. \cite[ch. 2]{plp}
+The system works in two stages: scanning the original source for
+tokens and parsing a sequence of tokens into a parse tree.  The
+scanner's purpose is to divide a string of raw code into the smallest
+possible meaningful pieces called tokens.  Each token will be assigned
+a type by the scanner, such as operator, numeric literal, or identifier.
+My scanner API takes an array of token type objects and a string of
+input source code.  The array of token types should look like the
+following:
+
+: var tokenTypes = [
+:   { t:'number', re:/^\d+/ },    // one or more digits
+:   { t:'word', re:/^[a-z]+/ },   // one or more letters
+:   { t:'whitespace', re:/^\s+/ } // one or more whitespace characters
+: ];
+
+\noindent
+In a loop, the scanner tries each of the regular expressions in the
+token type list until one matches at the beginning of the source code,
+creates a new token object of the associated type with the matched
+string as a value, and shifts the matched string off of the beginning
+of the source code.  A token type with the name \verb|whitespace| is
+special.  By default \verb|whitespace| tokens are omitted from the
+result.  The above token type list could transform
+
+: foo 1 2 bar 3 baz qux 4
+
+into
+
+: [ { type: 'word', value: 'foo' },
+:   { type: 'number', value: '1' },
+:   { type: 'number', value: '2' },
+:   { type: 'word', value: 'bar' },
+:   { type: 'number', value: '3' },
+:   { type: 'word', value: 'baz' },
+:   { type: 'word', value: 'qux' },
+:   { type: 'number', value: '4' } ]
+
+\noindent
+Once a sequence of tokens is generated, they can be parsed into a
+tree.  A parse tree is basically a way of organizing a sequence of
+tokens into a form that has meaningful structure using a context-free
+grammar.  For example, a scanner could break up the string
+
+: '(foo bar ) ( baz qux )'
+
+into tokens representing words and parentheses but a parser would be
+needed to determine that \verb|foo| and \verb|bar| are grouped
+together and that \verb|baz| and \verb|qux| are separately grouped
+together. \\
+
+\noindent
+I implemented two different parsing algorithms with the same
+API.  Recursive descent is the faster of the two, but CYK is
+guaranteed to work for arbitrarily ambiguous grammars in reasonably
+well bounded time ($O(n^3)$) so long as there is at least one valid
+parsing of the input token list.\cite{cyk}  My parsing API takes a
+context-free grammar formatted as a JSON object and a list of tokens
+and returns a JSON parse tree.  Continuing the previous example,
+consider the following grammar:
+
+: var parseGrammar = {
+:   "_program": [
+:     ["_function", "_program"],
+:     []
+:   ],
+:   "_function": [
+:     ["word", "_arguments"]
+:   ],
+:   "_arguments": [
+:     ["number", "_arguments"],
+:     []
+:   ]
+: };
+
+\noindent
+With the above sequence of tokens, this grammar would produce the
+following tree:
+
+: [ { "type": "_program", "tree": [
+:   { "type": "_function", "tree": [
+:     { "type": "word", "value": "foo" },
+:     { "type": "_arguments", "tree": [
+:       { "type": "number", "value": "1" },
+:       { "type": "_arguments", "tree": [
+:         { "type": "number", "value": "2" },
+:         { "type": "_arguments", "tree": [ ] }
+:       ] }
+:     ] }
+:   ] },
+:   { "type": "_program", "tree": [
+:     { "type": "_function", "tree": [
+:       { "type": "word", "value": "bar" },
+:       { "type": "_arguments", "tree": [
+:         { "type": "number", "value": "3" },
+:         { "type": "_arguments", "tree": [ ] }
+:       ] }
+:     ] },
+:     { "type": "_program", "tree": [
+:       { "type": "_function", "tree": [
+:         { "type": "word", "value": "baz" },
+:         { "type": "_arguments", "tree": [ ] }
+:       ] },
+:       { "type": "_program", "tree": [
+:         { "type": "_function", "tree": [
+:           { "type": "word", "value": "qux" },
+:           { "type": "_arguments", "tree": [
+:             { "type": "number", "value": "4" },
+:             { "type": "_arguments", "tree": [ ] }
+:           ] }
+:         ] },
+:         { "type": "_program", "tree": [ ] }
+:       ] }
+:     ] }
+:   ] }
+: ] } ]
+
+* Semantic analysis
+
+\noindent
+After the parsing organizes the code into a structure, the next step
+is to extract meaning from that structure using semantic
+analysis.\cite[ch. 4]{plp}  My semantic analysis system provides a mapping from the various node
+types in the tree structure (in this case \verb|_program|,
+\verb|_function|, \verb|_arguments|, \verb|word|, and \verb|number|)
+to functions for handling them.  For a simple interpreted language,
+these functions could return the program's output.  For a more complex
+one like Hot Cocoa Lisp, they return a much simpler data structure
+called an abstract syntax tree that is isomorphic to the structure of
+Lisp syntax.  For parsing a simple Lisp-like language, the abstraction
+of a parsing and semantic analysis library is not really necessary.  A much simpler algorithm could
+have been used to generate the abstract syntax tree, but I enjoyed the
+exercise of building up the infrastructure, and I think it helped me
+to build a richer understanding of language implementation as well as
+API design. \\
+
+* Templating
+
+\noindent
+When I realized that I was going to make a compiler, it occurred to me
+that I needed a templating system to format the compiled JavaScript
+source.  My templating system mostly consists of a format function
+which takes a format string and a values object or array as arguments.
+Values are interpolated into the format string in place of
+\tttext{\symbol{126}}\verb|TAGNAME|\tttext{\symbol{126}} where
+\verb|'TAGNAME'| is a key in the values object.  If no key is
+specified (i.e. '\~\~') then the key is the integer number of empty
+interpolations preceding this one.  For example:
+
+: format("(~~) (~~) (~~)", [1, 7, 19]); // "(1) (7) (19)"
+: format(" *~stars~* _~underbars~_ ",
+:        { stars: "foo", underbars: "bar" }); // " *foo* _bar_ "
+
+* Function maps
+
+\noindent
+I also made a system for organizing built-in functions that I called
+function maps.  The basic idea was to have a JavaScript object that
+relates the name of a built-in function to a compilation function that
+generates JavaScript source for that function.  In its most basic
+form, this compilation function can be defined by a format string.
+For example, the Lisp \verb|if| function is simply defined by the
+format string:
+
+: '(~~ ? ~~ : ~~)'
+
+\noindent
+The function map also keeps track of synonyms and provides a mechanism
+for associating properties with functions. \\
+
+* Testing
+
+\noindent
+I also built a test system with two parts.  The first is an API that
+takes an array of pairs (arrays with two elements).  If the first of
+the pair is a function, then it is called inside of a try block, and
+its result or error message is used as the first value.  The two
+values are then compared, and the test is considered passed if they are
+equal.  The API then prints to standard out how many tests were passed
+and what was expected and gotten in any tests that failed.  The second
+part of the system is an executable that recursively scans the current
+working directory and its children for files that match
+\verb|**/tests/*.js| or \verb|**/*.test.js|, executes them with
+Node.js, prints their output, and summarizes the number of tests
+tried and passed.  The executable test script can be installed and run using:
+
+: $ npm -g install hot-cocoa
+: $ hot-cocoa-test
