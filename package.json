@@ -1,6 +1,6 @@
 {
   "name": "hot-cocoa",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Sam Auciello <info@samauciello.com>",
   "description": "A set of tools for implementing languages in Node.js",
   "main": "./main.js",
